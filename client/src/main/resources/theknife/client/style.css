@@ -43,11 +43,6 @@
     -fx-cursor: hand !important;
 }
 
-/* colore dei Text contenuti nel TextFlow */
-#contenitoreLink .text {
-    -fx-fill: #4da046 !important;
-}
-
 /* stile al link specifico usando l'ID (#) */
 #linkRegistrati {
     -fx-underline: true !important; /* Forza la sottolineatura */
