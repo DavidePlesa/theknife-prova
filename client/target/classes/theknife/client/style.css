@@ -1,0 +1,54 @@
+/* Sfondo scuro per tutta l'applicazione */
+.root {
+    -fx-background-color: #121212;
+}
+
+/* Stile delle Label (Testi) */
+.label {
+    -fx-text-fill: #4da046 !important;
+    -fx-font-weight: bold;
+}
+
+/* Stile dei Text Fields e Password Fields */
+.text-input, .text-field {
+    -fx-background-color: #1e1e1e !important;
+    -fx-text-fill: white !important;
+    -fx-border-color: #333333 !important;
+    -fx-border-radius: 5 !important;
+    -fx-background-radius: 5 !important;
+}
+
+/* Click / Focus dei Text Fields */
+.text-field:focused, .text-input:focused {
+    -fx-border-color: #74c34a !important;
+    -fx-background-color: #1e1e1e !important;
+}
+
+/* Colore del testo suggerito (placeholder) */
+.text-field, .text-input {
+    -fx-prompt-text-fill: #666666 !important;
+}
+
+/* Stile del bottone */
+.button {
+    -fx-background-color: #23a952 !important;
+    -fx-text-fill: #121212 !important;
+    -fx-font-weight: bold !important;
+    -fx-background-radius: 5 !important;
+    -fx-padding: 10 !important;
+}
+
+.button:hover {
+    -fx-background-color: #23a955 !important;
+    -fx-cursor: hand !important;
+}
+
+/* stile al link specifico usando l'ID (#) */
+#linkRegistrati {
+    -fx-underline: true !important; /* Forza la sottolineatura */
+    -fx-font-weight: bold;
+}
+
+#linkRegistrati:hover {
+    -fx-fill: #74c34a !important; 
+}
