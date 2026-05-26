@@ -45,12 +45,12 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             
-            <VBox alignment="CENTER" maxWidth="400.0" prefWidth="250.0" style="-fx-spacing: 20;">
+            <VBox alignment="CENTER" maxWidth="400.0" prefWidth="200.0" style="-fx-spacing: 20;">
                <children>
                   <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -65,8 +65,9 @@
 
                   <TextField promptText="Username..." />
                   <PasswordField promptText="Password..." />
-                  <Button mnemonicParsing="false" text="Accedi" />
-                  <TextFlow id="contenitoreLink" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: 4da046;" textAlignment="CENTER">
+                  <Button id="btnAccedi" mnemonicParsing="false" text="Accedi" />
+                  <Button id="btnAccediGuest" mnemonicParsing="false" text="Entra come Guest" />
+                  <TextFlow textAlignment="CENTER">
                      <children>
                         <Text fill="#4da046" text="Non hai un account? " />
                         <Text id="linkRegistrati" fill="#4da046" text="Registrati Qui">
