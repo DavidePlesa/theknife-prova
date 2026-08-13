@@ -27,8 +27,8 @@
     -fx-font-size: 13px;
 }
 
-#usernameLabel, #benvenutoLabel {
-    -fx-text-fill: #4da046;
+#usernameLabel {
+    -fx-fill: #23a952;
     -fx-font-weight: bold;
     -fx-font-size: 13px;
 }

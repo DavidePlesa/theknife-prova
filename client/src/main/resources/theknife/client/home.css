@@ -27,7 +27,7 @@
     -fx-font-size: 13px;
 }
 
-#usernameText {
+#usernameLabel {
     -fx-fill: #23a952;
     -fx-font-weight: bold;
     -fx-font-size: 13px;
