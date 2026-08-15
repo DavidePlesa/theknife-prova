@@ -1,0 +1,362 @@
+/* ── ROOT ── */
+.root {
+    -fx-background-color: #121212;
+    -fx-font-family: "System";
+}
+
+/* ============================================
+   TOPBAR
+   ============================================ */
+#topbar {
+    -fx-background-color: #1a1a1a;
+    -fx-border-color: #2a2a2a;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 0 20 0 20;
+    -fx-spacing: 9;
+    -fx-alignment: CENTER_LEFT;
+}
+
+#topbar .label {
+    -fx-text-fill: #cccccc;
+    -fx-font-size: 13px;
+}
+
+#logoLabel {
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+}
+
+#benvenutoLabel {
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+/* ============================================
+   SIDEBAR
+   ============================================ */
+#sidebar {
+    -fx-background-color: #1a1a1a;
+    -fx-border-color: #2a2a2a;
+    -fx-border-width: 0 1 0 0;
+    -fx-pref-width: 150px;
+}
+
+#sidebar .label {
+    -fx-text-fill: #9ca3af;
+    -fx-font-weight: normal;
+}
+
+#filtriLabel {
+    -fx-text-fill: #555555 !important;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 14 5 14;
+}
+
+.separator *.line {
+    -fx-border-color: #2a2a2a;
+    -fx-border-width: 1 0 0 0;
+}
+
+/* ── SCROLLPANE SIDEBAR ── */
+#sidebarScroll {
+    -fx-background-color: transparent;
+    -fx-background: #1a1a1a;
+    -fx-border-color: transparent;
+}
+
+#sidebarScroll .viewport {
+    -fx-background-color: transparent;
+}
+
+#sidebarScroll .scroll-bar {
+    -fx-background-color: #1a1a1a;
+}
+
+#sidebarScroll .scroll-bar .thumb {
+    -fx-background-color: #2a2a2a;
+    -fx-background-radius: 2px;
+}
+
+/* ── ACCORDION & TITLED PANE ── */
+.accordion {
+    -fx-background-color: #1a1a1a;
+}
+
+.titled-pane {
+    -fx-text-fill: #9ca3af;
+    -fx-font-size: 12px;
+    -fx-animated: false;
+}
+
+/* Specificità alta per sovrascrivere Modena */
+.accordion > .titled-pane > .title {
+    -fx-background-color: #1a1a1a;
+    -fx-padding: 7 14 7 14;
+    -fx-border-color: #2a2a2a;
+    -fx-border-width: 0 0 1 0;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+}
+
+.accordion > .titled-pane > .title:hover {
+    -fx-background-color: #222222;
+}
+
+/* Fix per il testo interno al titolo */
+.accordion > .titled-pane > .title > .text {
+    -fx-fill: #9ca3af;
+}
+
+.accordion > .titled-pane > .title:hover > .text {
+    -fx-fill: #e5e7eb;
+}
+
+.accordion > .titled-pane > .title > .arrow-button > .arrow {
+    -fx-background-color: #9ca3af;
+}
+
+.accordion > .titled-pane > .content {
+    -fx-background-color: #161616;
+    -fx-padding: 6 10 8 14;
+    -fx-border-color: #2a2a2a;
+    -fx-border-width: 0 0 1 0;
+}
+
+/* ── LISTVIEW ── */
+.list-view {
+    -fx-background-color: #1e1e1e;
+    -fx-border-color: #2a2a2a;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+
+.list-view .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #9ca3af;
+    -fx-font-size: 12px;
+    -fx-padding: 4 8 4 8;
+}
+
+.list-view .list-cell:hover {
+    -fx-background-color: #1a2e1a;
+    -fx-text-fill: #4da046;
+}
+
+.list-view .list-cell:selected {
+    -fx-background-color: #1a3a1a;
+    -fx-text-fill: #23a952;
+    -fx-font-weight: bold;
+}
+
+/* ── CHECKBOX ── */
+.check-box {
+    -fx-text-fill: #9ca3af;
+    -fx-font-size: 12px;
+    -fx-padding: 4 0 4 0;
+}
+
+.check-box:hover {
+    -fx-text-fill: #e5e7eb;
+}
+
+.check-box .box {
+    -fx-background-color: #1e1e1e;
+    -fx-border-color: #2a2a2a;
+    -fx-border-radius: 3px;
+    -fx-background-radius: 3px;
+}
+
+.check-box:selected .box {
+    -fx-background-color: #23a952;
+    -fx-border-color: #23a952;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: #121212;
+}
+
+/* ── SPINNER ── */
+.spinner {
+    -fx-background-color: #1e1e1e;
+    -fx-border-color: #2a2a2a;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+
+.spinner .text-field {
+    -fx-background-color: #1e1e1e;
+    -fx-text-fill: #e5e7eb;
+    -fx-font-size: 12px;
+    -fx-border-color: transparent;
+}
+
+.spinner .increment-arrow-button,
+.spinner .decrement-arrow-button {
+    -fx-background-color: #2a2a2a;
+}
+
+.spinner .increment-arrow-button:hover,
+.spinner .decrement-arrow-button:hover {
+    -fx-background-color: #23a952;
+}
+
+.spinner .increment-arrow,
+.spinner .decrement-arrow {
+    -fx-background-color: #9ca3af;
+}
+
+/* ── RAGGIO ── */
+#raggioBox {
+    -fx-padding: 10 14 6 14;
+}
+
+#raggioLabel {
+    -fx-text-fill: #6b7280 !important;
+    -fx-font-size: 11px;
+    -fx-font-weight: normal;
+}
+
+#raggioValore {
+    -fx-text-fill: #23a952 !important;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+/* ── SLIDER ── */
+.slider .track {
+    -fx-background-color: #a4a4a4;
+    -fx-pref-height: 4px;
+    -fx-max-height: 4px;
+    -fx-background-radius: 2px;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.slider .thumb {
+    -fx-background-color: #404040;
+    -fx-border-color: #23a952;
+    -fx-border-width: 2px;
+    -fx-border-radius: 50%;
+    -fx-background-radius: 50%;
+    -fx-pref-width: 14px;
+    -fx-pref-height: 14px;
+}
+
+.slider .thumb:hover {
+    -fx-background-color: #1a3a1a;
+}
+
+/* ── LOGOUT ── */
+#btnLogout {
+    -fx-background-color: transparent;
+    -fx-text-fill: #f87171;
+    -fx-font-size: 12px;
+    -fx-border-color: transparent;
+    -fx-padding: 8 14 8 14;
+    -fx-cursor: hand;
+    -fx-alignment: CENTER_LEFT;
+    -fx-pref-width: 150px;
+    -fx-font-weight: bold;
+}
+
+#btnLogout:hover {
+    -fx-background-color: #2a1a1a;
+    -fx-text-fill: #fca5a5;
+}
+
+/* ============================================
+   CENTER
+   ============================================ */
+#centerPane {
+    -fx-background-color: #121212;
+    -fx-padding: 18 20 0 20;
+    -fx-spacing: 12;
+}
+
+#titoloRistoranti {
+    -fx-text-fill: #f0fdf4;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+#sottotitoloRistoranti {
+    -fx-text-fill: #555555;
+    -fx-font-size: 11px;
+    -fx-font-weight: normal;
+}
+
+#labelRisultati {
+    -fx-text-fill: #23a952;
+    -fx-font-size: 11px;
+    -fx-background-color: #0d1f0f;
+    -fx-border-color: #23a952;
+    -fx-border-width: 1px;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-padding: 2 8 2 8;
+    -fx-font-weight: bold;
+}
+
+/* ── GRID SCROLLPANE ── */
+#gridScroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+}
+
+#gridScroll .viewport {
+    -fx-background-color: transparent;
+}
+
+/* ── FOOTER ── */
+#footerBox {
+    -fx-padding: 8 0 10 0;
+    -fx-spacing: 8;
+    -fx-alignment: CENTER_LEFT;
+    -fx-border-color: #2a2a2a;
+    -fx-border-width: 1 0 0 0;
+}
+
+#btnPrev, #btnNext {
+    -fx-background-color: #1e1e1e;
+    -fx-text-fill: #9ca3af;
+    -fx-border-color: #333333;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-pref-width: 28px;
+    -fx-pref-height: 28px;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+    -fx-padding: 0;
+    -fx-alignment: center;
+}
+
+#btnPrev:hover, #btnNext:hover {
+    -fx-border-color: #23a952;
+    -fx-text-fill: #23a952;
+}
+
+#labelPagina {
+    -fx-text-fill: #555555;
+    -fx-font-size: 12px;
+    -fx-font-weight: normal;
+}
+
+#btnAvviaRicerca {
+    -fx-background-color: #23a952;
+    -fx-text-fill: #121212;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 7 14 7 14;
+    -fx-cursor: hand;
+}
+
+#btnAvviaRicerca:hover {
+    -fx-background-color: #74c34a;
+}

@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Copyright (c) 2015, 2019, Gluon and/or its affiliates.
+  All rights reserved. Use is subject to license terms.
+
+  This file is available and licensed under the following license:
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions
+  are met:
+
+  - Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+  - Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in
+    the documentation and/or other materials provided with the distribution.
+  - Neither the name of Oracle Corporation nor the names of its
+    contributors may be used to endorse or promote products derived
+    from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" stylesheets="@home.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+
+   <!-- TOPBAR -->
+   <top>
+      <HBox fx:id="topbar" alignment="CENTER_LEFT" prefHeight="52.0" spacing="9.0" BorderPane.alignment="CENTER_LEFT">
+         <children>
+            <ImageView fitHeight="36.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@The_Knife_logo.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="logoLabel" text="The Knife"/>
+            <Region HBox.hgrow="ALWAYS" />
+            <HBox alignment="CENTER_LEFT" spacing="8.0">
+               <children>
+                  <HBox alignment="CENTER_LEFT" spacing="3.0">
+                     <children>
+                        <Label text="Benvenuto," />
+                        <Label fx:id="benvenutoLabel" text="Utente" />
+                     </children>
+                   </HBox>
+                  <Circle fill="#166534" radius="18.0" stroke="#22c55e" strokeType="INSIDE" strokeWidth="1.5" />
+               </children>
+            </HBox>
+         </children>
+         <padding>
+            <Insets left="20.0" right="20.0" />
+         </padding>
+      </HBox>
+   </top>
+
+   <!-- SIDEBAR -->
+   <left>
+      <VBox fx:id="sidebar" prefHeight="600.0" prefWidth="150.0" BorderPane.alignment="CENTER">
+         <children>
+
+            <!-- Filtri scrollabili -->
+            <ScrollPane fx:id="sidebarScroll" fitToWidth="true" VBox.vgrow="ALWAYS">
+               <content>
+                  <VBox>
+                     <children>
+                        <Label fx:id="filtriLabel" text="FILTRI">
+                           <padding>
+                              <Insets bottom="5.0" left="14.0" top="10.0" />
+                           </padding>
+                        </Label>
+                        <Separator />
+                        <Accordion>
+                           <panes>
+
+                              <!-- Cucina -->
+                              <TitledPane animated="false" text="Cucina">
+                                 <content>
+                                    <ListView fx:id="listViewCucina" prefHeight="110.0" />
+                                 </content>
+                              </TitledPane>
+
+                              <!-- Prezzo -->
+                              <TitledPane animated="false" text="Prezzo">
+                                 <content>
+                                    <ListView fx:id="listViewPrezzo" prefHeight="80.0" />
+                                 </content>
+                              </TitledPane>
+
+                              <!-- Valutazione -->
+                              <TitledPane animated="false" text="Valutazione">
+                                 <content>
+                                    <HBox alignment="CENTER_LEFT" spacing="8.0">
+                                       <children>
+                                          <Label text="Stelle:" />
+                                          <Spinner fx:id="spinnerValutazione" editable="false" prefWidth="70.0" />
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="4.0" top="4.0" />
+                                       </padding>
+                                    </HBox>
+                                 </content>
+                              </TitledPane>
+
+                              <!-- Servizi -->
+                              <TitledPane animated="false" text="Servizi">
+                                 <content>
+                                    <VBox spacing="4.0">
+                                       <children>
+                                          <CheckBox fx:id="checkDelivery" mnemonicParsing="false" text="Delivery" />
+                                          <CheckBox fx:id="checkPrenotazione" mnemonicParsing="false" text="Prenotazione" />
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="4.0" top="4.0" />
+                                       </padding>
+                                    </VBox>
+                                 </content>
+                              </TitledPane>
+
+                           </panes>
+                        </Accordion>
+                     </children>
+                  </VBox>
+               </content>
+            </ScrollPane>
+
+            <!-- Separatore raggio -->
+            <Separator opacity="0.1" />
+
+            <!-- Raggio di ricerca -->
+            <VBox fx:id="raggioBox" spacing="6.0">
+               <children>
+                  <HBox alignment="CENTER_LEFT">
+                     <children>
+                        <Label fx:id="raggioLabel" text="Raggio di ricerca: " HBox.hgrow="ALWAYS" />
+                        <Label fx:id="raggioValore" text="30 km" />
+                     </children>
+                  </HBox>
+                  <Slider fx:id="sliderRaggio" blockIncrement="5.0" max="150.0" min="5.0" value="30.0" />
+               </children>
+               <padding>
+                  <Insets bottom="8.0" left="14.0" right="14.0" top="10.0" />
+               </padding>
+            </VBox>
+            <Separator opacity="0.1" />
+
+            <!-- Logout -->
+            <Button fx:id="btnLogout" mnemonicParsing="false" text="Logout / Esci ↩" />
+
+         </children>
+      </VBox>
+   </left>
+
+   <!-- CENTER -->
+   <center>
+      <VBox fx:id="centerPane" BorderPane.alignment="CENTER">
+         <children>
+
+            <!-- Header -->
+            <HBox alignment="CENTER_LEFT" spacing="8.0">
+               <children>
+                  <VBox>
+                     <children>
+                        <Label fx:id="titoloRistoranti" text="Ristoranti Vicini" />
+                        <Label fx:id="sottotitoloRistoranti" text="Seleziona i filtri per effettuare la ricerca" />
+                     </children>
+                  </VBox>
+                  <Region HBox.hgrow="ALWAYS" />
+                  <Label fx:id="labelRisultati" text="N/A Risultati" />
+               </children>
+               <padding>
+                  <Insets bottom="12.0" />
+               </padding>
+            </HBox>
+
+            <!-- Griglia ristoranti -->
+            <ScrollPane fx:id="gridScroll" fitToWidth="true" VBox.vgrow="ALWAYS">
+               <content>
+                  <GridPane fx:id="gridPane" hgap="10.0" vgap="10.0">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                     </columnConstraints>
+                  </GridPane>
+               </content>
+            </ScrollPane>
+
+            <!-- Footer paginazione -->
+            <HBox fx:id="footerBox" alignment="CENTER_LEFT" spacing="8.0">
+               <children>
+                  <Button fx:id="btnPrev" mnemonicParsing="false" text="&lt;" />
+                  <Label fx:id="labelPagina" text="Pagina: N/A" />
+                  <Button fx:id="btnNext" mnemonicParsing="false" text="&gt;" />
+                  <Region HBox.hgrow="ALWAYS" />
+                  <Button fx:id="btnAvviaRicerca" mnemonicParsing="false" text="Avvia Ricerca" />
+               </children>
+               <padding>
+                  <Insets bottom="10.0" top="8.0" />
+               </padding>
+            </HBox>
+
+         </children>
+         <padding>
+            <Insets left="20.0" right="20.0" top="18.0" />
+         </padding>
+      </VBox>
+   </center>
+
+</BorderPane>
