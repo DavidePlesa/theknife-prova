@@ -70,8 +70,8 @@
                <children>
                   <HBox alignment="CENTER_LEFT" spacing="3.0">
                      <children>
-                        <Label fx:id="benvenutoLabel" text="Benvenuto, "/>
-                        <Label fx:id="usernameLabel" text="Utente"/>
+                        <Label text="Benvenuto," />
+                        <Label fx:id="benvenutoLabel" text="Utente" />
                      </children>
                    </HBox>
                   <Circle fill="#166534" radius="18.0" stroke="#22c55e" strokeType="INSIDE" strokeWidth="1.5" />
@@ -155,7 +155,7 @@
             </ScrollPane>
 
             <!-- Separatore raggio -->
-            <Separator />
+            <Separator opacity="0.1" />
 
             <!-- Raggio di ricerca -->
             <VBox fx:id="raggioBox" spacing="6.0">
@@ -172,9 +172,10 @@
                   <Insets bottom="8.0" left="14.0" right="14.0" top="10.0" />
                </padding>
             </VBox>
+            <Separator opacity="0.1" />
 
             <!-- Logout -->
-            <Button fx:id="btnLogout" mnemonicParsing="false" text="Logout / Esci" />
+            <Button fx:id="btnLogout" mnemonicParsing="false" text="Logout / Esci ↩" />
 
          </children>
       </VBox>

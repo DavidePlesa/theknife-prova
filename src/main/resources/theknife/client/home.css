@@ -16,19 +16,19 @@
     -fx-alignment: CENTER_LEFT;
 }
 
+#topbar .label {
+    -fx-text-fill: #cccccc;
+    -fx-font-size: 13px;
+}
+
 #logoLabel {
-    -fx-text-fill: #4da046;
+    -fx-text-fill: #ffffff;
     -fx-font-weight: bold;
     -fx-font-size: 15px;
 }
 
-#topbar .text {
-    -fx-fill: #cccccc;
-    -fx-font-size: 13px;
-}
-
-#usernameLabel {
-    -fx-fill: #23a952;
+#benvenutoLabel {
+    -fx-text-fill: #ffffff;
     -fx-font-weight: bold;
     -fx-font-size: 13px;
 }
@@ -43,21 +43,27 @@
     -fx-pref-width: 150px;
 }
 
+#sidebar .label {
+    -fx-text-fill: #9ca3af;
+    -fx-font-weight: normal;
+}
+
 #filtriLabel {
-    -fx-text-fill: #555555;
+    -fx-text-fill: #555555 !important;
     -fx-font-size: 10px;
     -fx-font-weight: bold;
     -fx-padding: 10 14 5 14;
 }
 
-.separator .line {
+.separator *.line {
     -fx-border-color: #2a2a2a;
     -fx-border-width: 1 0 0 0;
 }
 
+/* ── SCROLLPANE SIDEBAR ── */
 #sidebarScroll {
     -fx-background-color: transparent;
-    -fx-background: transparent;
+    -fx-background: #1a1a1a;
     -fx-border-color: transparent;
 }
 
@@ -74,47 +80,45 @@
     -fx-background-radius: 2px;
 }
 
-/* ── ACCORDION ── */
+/* ── ACCORDION & TITLED PANE ── */
 .accordion {
-    -fx-background-color: transparent;
+    -fx-background-color: #1a1a1a;
 }
 
 .titled-pane {
-    -fx-background-color: transparent;
     -fx-text-fill: #9ca3af;
     -fx-font-size: 12px;
     -fx-animated: false;
 }
 
-.titled-pane > .title {
-    -fx-background-color: transparent;
+/* Specificità alta per sovrascrivere Modena */
+.accordion > .titled-pane > .title {
+    -fx-background-color: #1a1a1a;
     -fx-padding: 7 14 7 14;
     -fx-border-color: #2a2a2a;
     -fx-border-width: 0 0 1 0;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
 }
 
-.titled-pane > .title:hover {
+.accordion > .titled-pane > .title:hover {
     -fx-background-color: #222222;
 }
 
-.titled-pane > .title .text {
+/* Fix per il testo interno al titolo */
+.accordion > .titled-pane > .title > .text {
     -fx-fill: #9ca3af;
-    -fx-font-size: 12px;
 }
 
-.titled-pane > .title:hover .text {
+.accordion > .titled-pane > .title:hover > .text {
     -fx-fill: #e5e7eb;
 }
 
-.titled-pane > .title > .arrow-button {
-    -fx-background-color: transparent;
-}
-
-.titled-pane > .title > .arrow-button > .arrow {
+.accordion > .titled-pane > .title > .arrow-button > .arrow {
     -fx-background-color: #9ca3af;
 }
 
-.titled-pane > .content {
+.accordion > .titled-pane > .content {
     -fx-background-color: #161616;
     -fx-padding: 6 10 8 14;
     -fx-border-color: #2a2a2a;
@@ -210,26 +214,29 @@
 }
 
 #raggioLabel {
-    -fx-text-fill: #6b7280;
+    -fx-text-fill: #6b7280 !important;
     -fx-font-size: 11px;
     -fx-font-weight: normal;
 }
 
 #raggioValore {
-    -fx-text-fill: #23a952;
+    -fx-text-fill: #23a952 !important;
     -fx-font-size: 11px;
     -fx-font-weight: bold;
 }
 
 /* ── SLIDER ── */
 .slider .track {
-    -fx-background-color: #2a2a2a;
+    -fx-background-color: #a4a4a4;
     -fx-pref-height: 4px;
+    -fx-max-height: 4px;
     -fx-background-radius: 2px;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
 }
 
 .slider .thumb {
-    -fx-background-color: #121212;
+    -fx-background-color: #404040;
     -fx-border-color: #23a952;
     -fx-border-width: 2px;
     -fx-border-radius: 50%;
@@ -324,6 +331,8 @@
     -fx-pref-height: 28px;
     -fx-cursor: hand;
     -fx-font-weight: bold;
+    -fx-padding: 0;
+    -fx-alignment: center;
 }
 
 #btnPrev:hover, #btnNext:hover {

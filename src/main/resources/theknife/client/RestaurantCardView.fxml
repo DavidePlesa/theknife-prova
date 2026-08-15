@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="4" styleClass="ristorante-card" stylesheets="@restaurantCard.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" >
+    <padding>
+        <Insets top="12" right="12" bottom="12" left="12" />
+    </padding>
+
+    <Label fx:id="nomeLabel" styleClass="card-nome" />
+    <Label fx:id="categoriaLabel" styleClass="card-categoria" />
+    <Label fx:id="localitaLabel" styleClass="card-localita" />
+    <HBox fx:id="tagsBox" spacing="6" />
+</VBox>
