@@ -33,6 +33,12 @@
     -fx-font-size: 13px;
 }
 
+#topbar #inizialeLabel {
+    -fx-text-fill: #22c55e;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
 /* ============================================
    SIDEBAR
    ============================================ */
@@ -151,6 +157,81 @@
     -fx-font-weight: bold;
 }
 
+/* ── COMBOBOX (Bianca con bordi rotondi) ── */
+.combo-box {
+    -fx-background-color: #1e1e1e;
+    -fx-border-color: #2a2a2a;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-min-height: 30px;
+    -fx-pref-height: 30px;
+    -fx-max-height: 30px;
+    -fx-padding: 0;
+}
+
+.combo-box:hover {
+    -fx-border-color: #23a952;
+}
+
+.combo-box:focused {
+    -fx-border-color: #23a952;
+    -fx-border-width: 1.5px;
+}
+
+/* Casella di testo interna (testo chiaro su sfondo scuro, come lo spinner) */
+.combo-box .text-field {
+    -fx-background-color: #1e1e1e;
+    -fx-background-insets: 0;
+    -fx-background-radius: 4px;
+    -fx-text-fill: #e5e7eb;
+    -fx-prompt-text-fill: #6b7280;
+    -fx-font-size: 12px;
+    -fx-border-color: transparent;
+    -fx-padding: 4 8 4 8;
+}
+
+.combo-box .text-field:focused {
+    -fx-background-color: #1e1e1e;
+}
+
+/* Pulsante della freccetta a destra */
+.combo-box .arrow-button {
+    -fx-background-color: #2a2a2a;
+}
+
+.combo-box .arrow-button:hover {
+    -fx-background-color: #23a952;
+}
+
+.combo-box .arrow {
+    -fx-background-color: #9ca3af;
+}
+
+/* Menu a tendina (Popup) dei risultati, coerente con lo stile scuro */
+.combo-box-popup .list-view {
+    -fx-background-color: #1e1e1e;
+    -fx-border-color: #2a2a2a;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+
+.combo-box-popup .list-view .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #9ca3af;
+    -fx-font-size: 12px;
+    -fx-padding: 6 10 6 10;
+}
+
+.combo-box-popup .list-view .list-cell:hover {
+    -fx-background-color: #1a2e1a;
+    -fx-text-fill: #4da046;
+}
+
+.combo-box-popup .list-view .list-cell:selected {
+    -fx-background-color: #1a3a1a;
+    -fx-text-fill: #23a952;
+    -fx-font-weight: bold;
+}
 /* ── CHECKBOX ── */
 .check-box {
     -fx-text-fill: #9ca3af;

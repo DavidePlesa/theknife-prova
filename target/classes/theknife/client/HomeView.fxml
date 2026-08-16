@@ -36,8 +36,8 @@
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Slider?>
@@ -50,6 +50,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 
@@ -64,7 +65,7 @@
                   <Image url="@The_Knife_logo.png" />
                </image>
             </ImageView>
-            <Label fx:id="logoLabel" text="The Knife"/>
+            <Label fx:id="logoLabel" text="The Knife" />
             <Region HBox.hgrow="ALWAYS" />
             <HBox alignment="CENTER_LEFT" spacing="8.0">
                <children>
@@ -73,8 +74,11 @@
                         <Label text="Benvenuto," />
                         <Label fx:id="benvenutoLabel" text="Utente" />
                      </children>
-                   </HBox>
-                  <Circle fill="#166534" radius="18.0" stroke="#22c55e" strokeType="INSIDE" strokeWidth="1.5" />
+                  </HBox>
+                  <StackPane>
+                     <Circle fill="#166534" radius="18.0" stroke="#22c55e" strokeType="INSIDE" strokeWidth="1.5" />
+                     <Label fx:id="inizialeLabel" style="-fx-font-weight: bold;" text="U" />
+                  </StackPane>
                </children>
             </HBox>
          </children>
@@ -102,18 +106,17 @@
                         <Separator />
                         <Accordion>
                            <panes>
-
-                              <!-- Cucina -->
+                              <!-- Cucina con Autocomplete -->
                               <TitledPane animated="false" text="Cucina">
                                  <content>
-                                    <ListView fx:id="listViewCucina" prefHeight="110.0" />
+                                    <ComboBox fx:id="comboCucina" editable="true" maxWidth="Infinity" minHeight="28.0" prefHeight="28.0" promptText="Cerca cucina..." />
                                  </content>
                               </TitledPane>
 
-                              <!-- Prezzo -->
-                              <TitledPane animated="false" text="Prezzo">
+                              <!-- Località con Autocomplete -->
+                              <TitledPane animated="false" text="Località">
                                  <content>
-                                    <ListView fx:id="listViewPrezzo" prefHeight="80.0" />
+                                    <ComboBox fx:id="comboCitta" editable="true" maxWidth="Infinity" minHeight="28.0" prefHeight="28.0" promptText="Cerca città..." />
                                  </content>
                               </TitledPane>
 
@@ -155,7 +158,7 @@
             </ScrollPane>
 
             <!-- Separatore raggio -->
-            <Separator opacity="0.1" />
+            <Separator opacity="0.9" />
 
             <!-- Raggio di ricerca -->
             <VBox fx:id="raggioBox" spacing="6.0">
@@ -172,7 +175,7 @@
                   <Insets bottom="8.0" left="14.0" right="14.0" top="10.0" />
                </padding>
             </VBox>
-            <Separator opacity="0.1" />
+            <Separator opacity="0.9" />
 
             <!-- Logout -->
             <Button fx:id="btnLogout" mnemonicParsing="false" text="Logout / Esci ↩" />
