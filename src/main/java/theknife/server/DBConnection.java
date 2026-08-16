@@ -1,16 +1,33 @@
 package theknife.server;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class DBConnection {
-    // Configura con i dati del tuo DB PostgreSQL
-    private static final String URL = "jdbc:postgresql://localhost:5432/theknife_db";
-    private static final String USER = "postgres";
-    private static final String PASSWORD = "admin";
 
-    public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+    private Connection connection;
+
+    public DBConnection() {
+        try {
+            connection = DriverManager.getConnection(
+                "jdbc:postgresql://localhost:5432/theknife", "postgres", "$");
+            System.out.println("Server: Connessione con il DB riuscita.");
+        } catch (SQLException e) {
+            System.out.println("Server: Connessione con il DB fallita.");
+            e.printStackTrace();
+        }
+    }
+
+    public DBConnection(String url, String user, String psw) {
+        try {
+            connection = DriverManager.getConnection(url, user, psw);
+            System.out.println("Server: Connessione con il DB riuscita.");
+        } catch (SQLException e) {
+            System.out.println("Server: Connessione con il DB fallita.");
+            e.printStackTrace();
+        }
+    }
+
+    public Connection getConnection() {
+        return connection;
     }
 }
