@@ -1,7 +1,11 @@
 c:\Users\david\OneDrive\Desktop\theknife-prova\src\main\java\theknife\client\Client.java
 c:\Users\david\OneDrive\Desktop\theknife-prova\src\main\java\theknife\client\MainController.java
+c:\Users\david\OneDrive\Desktop\theknife-prova\src\main\java\theknife\common\Recensione.java
+c:\Users\david\OneDrive\Desktop\theknife-prova\src\main\java\theknife\common\Ristorante.java
 c:\Users\david\OneDrive\Desktop\theknife-prova\src\main\java\theknife\common\TheKnifeService.java
 c:\Users\david\OneDrive\Desktop\theknife-prova\src\main\java\theknife\common\Utente.java
 c:\Users\david\OneDrive\Desktop\theknife-prova\src\main\java\theknife\server\DBConnection.java
+c:\Users\david\OneDrive\Desktop\theknife-prova\src\main\java\theknife\server\RecensioneDAO.java
+c:\Users\david\OneDrive\Desktop\theknife-prova\src\main\java\theknife\server\RistoranteDAO.java
 c:\Users\david\OneDrive\Desktop\theknife-prova\src\main\java\theknife\server\TheKnifeServiceImpl.java
 c:\Users\david\OneDrive\Desktop\theknife-prova\src\main\java\theknife\server\UtenteDAO.java

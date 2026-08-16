@@ -15,20 +15,13 @@ public class UtenteDAO {
     }
 
     public Utente autentica(String username, String passwordCifrata) {
-        String query = "SELECT id, nome, cognome, username, ruolo FROM Utenti WHERE username = ? AND password = ?";
-        try (PreparedStatement pstmt = dbManager.getConnection().prepareStatement(query)) {
-            pstmt.setString(1, username);
-            pstmt.setString(2, passwordCifrata);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    return new Utente(
-                        rs.getInt("id"),
-                        rs.getString("nome"),
-                        rs.getString("cognome"),
-                        rs.getString("username"),
-                        rs.getString("ruolo")
-                    );
-                }
+        String sql = "SELECT * FROM utenti WHERE username = ? AND password = ?";
+        try (PreparedStatement ps = dbManager.getConnection().prepareStatement(sql)) {
+            ps.setString(1, username);
+            ps.setString(2, passwordCifrata); // SHA-256 hex
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                // costruisci e ritorna l'oggetto Utente
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -40,10 +33,10 @@ public class UtenteDAO {
             String passwordCifrata, String dataNascita,
             String luogoDomicilio, String ruolo) throws SQLException {
         String query = """
-            INSERT INTO Utenti
-            (nome, cognome, username, password, data_nascita, luogo_domicilio, ruolo)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-            """;
+                INSERT INTO Utenti
+                (nome, cognome, username, password, data_nascita, luogo_domicilio, ruolo)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                """;
         try (PreparedStatement pstmt = dbManager.getConnection().prepareStatement(query)) {
             pstmt.setString(1, nome);
             pstmt.setString(2, cognome);
@@ -81,28 +74,27 @@ public class UtenteDAO {
     public List<Ristorante> visualizzaPreferiti(int idUtente) throws SQLException {
         List<Ristorante> lista = new ArrayList<>();
         String query = """
-            SELECT r.* FROM RistorantiTheKnife r
-            JOIN Preferiti p ON r.id = p.id_ristorante
-            WHERE p.id_utente = ?
-            """;
+                SELECT r.* FROM RistorantiTheKnife r
+                JOIN Preferiti p ON r.id = p.id_ristorante
+                WHERE p.id_utente = ?
+                """;
         try (PreparedStatement pstmt = dbManager.getConnection().prepareStatement(query)) {
             pstmt.setInt(1, idUtente);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     lista.add(new Ristorante(
-                        rs.getInt("id"),
-                        rs.getString("nome"),
-                        rs.getString("nazione"),
-                        rs.getString("citta"),
-                        rs.getString("indirizzo"),
-                        rs.getDouble("latitudine"),
-                        rs.getDouble("longitudine"),
-                        rs.getDouble("prezzo_medio"),
-                        rs.getBoolean("delivery"),
-                        rs.getBoolean("prenotazione"),
-                        rs.getString("tipo_cucina"),
-                        rs.getInt("id_ristoratore")
-                    ));
+                            rs.getInt("id"),
+                            rs.getString("nome"),
+                            rs.getString("nazione"),
+                            rs.getString("citta"),
+                            rs.getString("indirizzo"),
+                            rs.getDouble("latitudine"),
+                            rs.getDouble("longitudine"),
+                            rs.getDouble("prezzo_medio"),
+                            rs.getBoolean("delivery"),
+                            rs.getBoolean("prenotazione"),
+                            rs.getString("tipo_cucina"),
+                            rs.getInt("id_ristoratore")));
                 }
             }
         }

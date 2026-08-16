@@ -9,7 +9,7 @@ public class DBConnection {
     public DBConnection() {
         try {
             connection = DriverManager.getConnection(
-                "jdbc:postgresql://localhost:5432/theknife", "postgres", "$");
+                "jdbc:postgresql://localhost:5432/theknife", "postgres", "admin");
             System.out.println("Server: Connessione con il DB riuscita.");
         } catch (SQLException e) {
             System.out.println("Server: Connessione con il DB fallita.");
