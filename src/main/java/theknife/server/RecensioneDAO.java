@@ -7,9 +7,9 @@ import java.util.List;
 
 public class RecensioneDAO {
 
-    private DBConnection dbManager;
+    private DBManager dbManager;
 
-    public RecensioneDAO(DBConnection dbManager) {
+    public RecensioneDAO(DBManager dbManager) {
         this.dbManager = dbManager;
     }
 

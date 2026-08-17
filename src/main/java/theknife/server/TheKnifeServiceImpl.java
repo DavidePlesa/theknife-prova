@@ -9,13 +9,13 @@ import java.util.List;
 
 public class TheKnifeServiceImpl implements TheKnifeService {
 
-    private DBConnection dbManager;
+    private DBManager dbManager;
     private UtenteDAO utenteDAO;
     private RistoranteDAO ristoranteDAO;
     private RecensioneDAO recensioneDAO;
 
     public TheKnifeServiceImpl() {
-        this.dbManager = new DBConnection();
+        this.dbManager = new DBManager();
         this.utenteDAO = new UtenteDAO(dbManager);
         this.ristoranteDAO = new RistoranteDAO(dbManager);
         this.recensioneDAO = new RecensioneDAO(dbManager);

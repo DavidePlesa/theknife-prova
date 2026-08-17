@@ -8,9 +8,9 @@ import java.util.List;
 
 public class UtenteDAO {
 
-    private DBConnection dbManager;
+    private DBManager dbManager;
 
-    public UtenteDAO(DBConnection dbManager) {
+    public UtenteDAO(DBManager dbManager) {
         this.dbManager = dbManager;
     }
 

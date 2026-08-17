@@ -7,23 +7,20 @@ import java.util.List;
 
 public class RistoranteDAO {
 
-    private DBConnection dbManager;
+    private DBManager dbManager;
 
-    public RistoranteDAO(DBConnection dbManager) {
+    public RistoranteDAO(DBManager dbManager) {
         this.dbManager = dbManager;
     }
 
-    public List<Ristorante> cerca(String citta, String cucina, Double prezzoMax, Boolean delivery, Boolean prenotazione,
-            Integer stelleMin, int pagina) throws SQLException {
-
+    public List<Ristorante> cerca(String citta, String cucina, Double prezzoMax, Boolean delivery, Boolean prenotazione, Integer stelleMin, int pagina) throws SQLException {
         List<Ristorante> lista = new ArrayList<>();
         int pageSize = 10;
         int offset = (pagina - 1) * pageSize;
 
         // Costruisce la query dinamicamente
-        StringBuilder query = new StringBuilder(
-                "SELECT r.* FROM RistorantiTheKnife r ");
-
+        StringBuilder query = new StringBuilder("SELECT r.* FROM RistorantiTheKnife r ");
+        
         if (stelleMin != null) {
             query.append("LEFT JOIN Recensioni rec ON r.id = rec.id_ristorante ");
         }

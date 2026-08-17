@@ -55,12 +55,14 @@
 <?import javafx.scene.shape.Circle?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" stylesheets="@home.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
-
    <!-- TOPBAR -->
    <top>
       <HBox fx:id="topbar" alignment="CENTER_LEFT" prefHeight="52.0" spacing="9.0" BorderPane.alignment="CENTER_LEFT">
          <children>
-            <ImageView fitHeight="36.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+               <VBox.margin>
+                  <Insets top="16.0" />
+               </VBox.margin>
                <image>
                   <Image url="@The_Knife_logo.png" />
                </image>
@@ -87,12 +89,10 @@
          </padding>
       </HBox>
    </top>
-
    <!-- SIDEBAR -->
    <left>
       <VBox fx:id="sidebar" prefHeight="600.0" prefWidth="150.0" BorderPane.alignment="CENTER">
          <children>
-
             <!-- Filtri scrollabili -->
             <ScrollPane fx:id="sidebarScroll" fitToWidth="true" VBox.vgrow="ALWAYS">
                <content>
@@ -106,20 +106,18 @@
                         <Separator />
                         <Accordion>
                            <panes>
-                              <!-- Cucina con Autocomplete -->
+                              <!-- Cucina -->
                               <TitledPane animated="false" text="Cucina">
                                  <content>
                                     <ComboBox fx:id="comboCucina" editable="true" maxWidth="Infinity" minHeight="28.0" prefHeight="28.0" promptText="Cerca cucina..." />
                                  </content>
                               </TitledPane>
-
-                              <!-- Località con Autocomplete -->
+                              <!-- Località -->
                               <TitledPane animated="false" text="Località">
                                  <content>
                                     <ComboBox fx:id="comboCitta" editable="true" maxWidth="Infinity" minHeight="28.0" prefHeight="28.0" promptText="Cerca città..." />
                                  </content>
                               </TitledPane>
-
                               <!-- Valutazione -->
                               <TitledPane animated="false" text="Valutazione">
                                  <content>
@@ -134,7 +132,6 @@
                                     </HBox>
                                  </content>
                               </TitledPane>
-
                               <!-- Servizi -->
                               <TitledPane animated="false" text="Servizi">
                                  <content>
@@ -156,10 +153,8 @@
                   </VBox>
                </content>
             </ScrollPane>
-
             <!-- Separatore raggio -->
             <Separator opacity="0.9" />
-
             <!-- Raggio di ricerca -->
             <VBox fx:id="raggioBox" spacing="6.0">
                <children>
@@ -176,19 +171,16 @@
                </padding>
             </VBox>
             <Separator opacity="0.9" />
-
             <!-- Logout -->
             <Button fx:id="btnLogout" mnemonicParsing="false" text="Logout / Esci ↩" />
 
          </children>
       </VBox>
    </left>
-
    <!-- CENTER -->
    <center>
       <VBox fx:id="centerPane" BorderPane.alignment="CENTER">
          <children>
-
             <!-- Header -->
             <HBox alignment="CENTER_LEFT" spacing="8.0">
                <children>
@@ -205,7 +197,6 @@
                   <Insets bottom="12.0" />
                </padding>
             </HBox>
-
             <!-- Griglia ristoranti -->
             <ScrollPane fx:id="gridScroll" fitToWidth="true" VBox.vgrow="ALWAYS">
                <content>
@@ -218,7 +209,6 @@
                   </GridPane>
                </content>
             </ScrollPane>
-
             <!-- Footer paginazione -->
             <HBox fx:id="footerBox" alignment="CENTER_LEFT" spacing="8.0">
                <children>
@@ -232,12 +222,10 @@
                   <Insets bottom="10.0" top="8.0" />
                </padding>
             </HBox>
-
          </children>
          <padding>
             <Insets left="20.0" right="20.0" top="18.0" />
          </padding>
       </VBox>
    </center>
-
 </BorderPane>

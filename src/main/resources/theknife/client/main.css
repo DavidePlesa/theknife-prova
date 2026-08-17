@@ -29,7 +29,13 @@
     -fx-prompt-text-fill: #666666 !important;
 }
 
-/* --- BOTTONE ACCEDI --- */
+/* --- LABEL ERRORE --- */
+.error-label {
+    -fx-text-fill: #e53935 !important;
+    -fx-font-size: 12px;
+    -fx-font-weight: normal !important; /* sovrascrive .label che mette bold */
+}
+
 /* --- BOTTONE ACCEDI --- */
 #btnAccedi {
     -fx-background-color: #23a952 !important;
