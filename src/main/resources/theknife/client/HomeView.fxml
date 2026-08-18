@@ -8,7 +8,7 @@
 
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions
-  are met:
+  sre met:
 
   - Redistributions of source code must retain the above copyright
     notice, this list of conditions and the following disclaimer.
@@ -54,15 +54,12 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" stylesheets="@home.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:controller="theknife.client.HomeController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" stylesheets="@home.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <!-- TOPBAR -->
    <top>
       <HBox fx:id="topbar" alignment="CENTER_LEFT" prefHeight="52.0" spacing="9.0" BorderPane.alignment="CENTER_LEFT">
          <children>
-            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-               <VBox.margin>
-                  <Insets top="16.0" />
-               </VBox.margin>
+            <ImageView fitHeight="40.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@The_Knife_logo.png" />
                </image>
@@ -91,7 +88,7 @@
    </top>
    <!-- SIDEBAR -->
    <left>
-      <VBox fx:id="sidebar" prefHeight="600.0" prefWidth="150.0" BorderPane.alignment="CENTER">
+      <VBox fx:id="sidebar" prefHeight="600.0" prefWidth="180.0" BorderPane.alignment="CENTER">
          <children>
             <!-- Filtri scrollabili -->
             <ScrollPane fx:id="sidebarScroll" fitToWidth="true" VBox.vgrow="ALWAYS">
@@ -146,7 +143,6 @@
                                     </VBox>
                                  </content>
                               </TitledPane>
-
                            </panes>
                         </Accordion>
                      </children>
@@ -173,7 +169,6 @@
             <Separator opacity="0.9" />
             <!-- Logout -->
             <Button fx:id="btnLogout" mnemonicParsing="false" text="Logout / Esci ↩" />
-
          </children>
       </VBox>
    </left>
@@ -216,7 +211,7 @@
                   <Label fx:id="labelPagina" text="Pagina: N/A" />
                   <Button fx:id="btnNext" mnemonicParsing="false" text="&gt;" />
                   <Region HBox.hgrow="ALWAYS" />
-                  <Button id="btnAccedi" mnemonicParsing="false" onAction="#handleLogin" text="Accedi" />
+                  <Button id="btnAvviaRicerca" mnemonicParsing="false" onAction="#handleCerca" text="Avvia Ricerca" />
                </children>
                <padding>
                   <Insets bottom="10.0" top="8.0" />

@@ -1,12 +1,18 @@
 package theknife.client;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import theknife.common.TheKnifeService;
 import theknife.common.Utente;
+
+import java.io.IOException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.security.MessageDigest;
@@ -106,12 +112,38 @@ public class MainController {
     @FXML
     private void handleGuest() {
         System.out.println("Accesso come guest");
-        // TODO: apri la HomeView in modalità guest
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("HomeView.fxml"));
+            Parent root = loader.load();
+
+            Stage registerStage = new Stage();
+            registerStage.setTitle("TheKnife - Home");
+            registerStage.setScene(new Scene(root));
+            registerStage.show();
+            ((Stage) usernameField.getScene().getWindow()).close();
+
+        } catch (IOException e) {
+            System.err.println("Errore durante il caricamento di HomeView.fxml");
+            e.printStackTrace();
+        }
     }
 
     @FXML
     private void handleRegistrati() {
         System.out.println("Vai alla registrazione");
-        // TODO: apri la RegistrazioneView
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("RegisterView.fxml"));
+            Parent root = loader.load();
+
+            Stage registerStage = new Stage();
+            registerStage.setTitle("TheKnife - Registrazione");
+            registerStage.setScene(new Scene(root));
+            registerStage.show();
+            ((Stage) usernameField.getScene().getWindow()).close();
+
+        } catch (IOException e) {
+            System.err.println("Errore durante il caricamento di RegisterView.fxml");
+            e.printStackTrace();
+        }
     }
 }
