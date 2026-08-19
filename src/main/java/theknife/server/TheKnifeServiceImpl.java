@@ -1,6 +1,9 @@
 package theknife.server;
 
 import theknife.common.*;
+import theknife.server.GeoTheKnife;
+
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -27,7 +30,8 @@ public class TheKnifeServiceImpl implements TheKnifeService {
     }
 
     @Override
-    public boolean registrazione(String nome, String cognome, String username, String passwordCifrata, String luogoDomicilio, String ruolo) throws RemoteException {
+    public boolean registrazione(String nome, String cognome, String username, String passwordCifrata,
+            String luogoDomicilio, String ruolo) throws RemoteException {
         try {
             return utenteDAO.registra(nome, cognome, username, passwordCifrata, luogoDomicilio, ruolo);
         } catch (Exception e) {
@@ -37,10 +41,11 @@ public class TheKnifeServiceImpl implements TheKnifeService {
     }
 
     @Override
-    public List<Ristorante> cercaRistorante(String citta, String cucina, Double prezzoMax, Boolean delivery, Boolean prenotazione, Integer stelleMin, int pagina) throws RemoteException {
+    public List<Ristorante> cercaRistorante(String citta, String cucina, Double prezzoMax, Boolean delivery,
+            Boolean prenotazione, Integer stelleMin, int pagina) throws RemoteException {
         try {
             return ristoranteDAO.cerca(citta, cucina, prezzoMax,
-                delivery, prenotazione, stelleMin, pagina);
+                    delivery, prenotazione, stelleMin, pagina);
         } catch (Exception e) {
             e.printStackTrace();
             return List.of();
@@ -145,6 +150,16 @@ public class TheKnifeServiceImpl implements TheKnifeService {
             return ristoranteDAO.findByRistoratore(idRistoratore);
         } catch (Exception e) {
             return List.of();
+        }
+    }
+
+    @Override
+    public boolean validaDomicilio(String domicilio) throws RemoteException {
+        try {
+            return GeoTheKnife.domicilioEsistente(domicilio);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 

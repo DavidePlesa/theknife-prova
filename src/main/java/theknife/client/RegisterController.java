@@ -15,14 +15,22 @@ import java.security.MessageDigest;
 
 public class RegisterController {
 
-    @FXML private TextField nomeField;
-    @FXML private TextField cognomeField;
-    @FXML private TextField usernameField;
-    @FXML private PasswordField passwordField;
-    @FXML private TextField domicilioField;
-    @FXML private RadioButton radioCliente;
-    @FXML private RadioButton radioRistoratore;
-    @FXML private Label errorLabel;
+    @FXML
+    private TextField nomeField;
+    @FXML
+    private TextField cognomeField;
+    @FXML
+    private TextField usernameField;
+    @FXML
+    private PasswordField passwordField;
+    @FXML
+    private TextField domicilioField;
+    @FXML
+    private RadioButton radioCliente;
+    @FXML
+    private RadioButton radioRistoratore;
+    @FXML
+    private Label errorLabel;
 
     private static final String CLASS_OK = "field-ok";
     private static final String CLASS_ERROR = "field-error";
@@ -51,7 +59,7 @@ public class RegisterController {
     }
 
     private void resetStato() {
-        for (Control c : new Control[]{nomeField, cognomeField, usernameField, passwordField, domicilioField})
+        for (Control c : new Control[] { nomeField, cognomeField, usernameField, passwordField, domicilioField })
             setFieldState(c, false);
         errorLabel.setVisible(false);
         errorLabel.setManaged(false);
@@ -76,12 +84,33 @@ public class RegisterController {
         String domicilio = domicilioField.getText().trim();
         String ruolo = radioCliente.isSelected() ? "cliente" : "ristoratore";
 
-        if (nome.isEmpty()) { mostraErrore("Inserisci il tuo nome.", nomeField); return; }
-        if (cognome.isEmpty()) { mostraErrore("Inserisci il tuo cognome.", cognomeField); return; }
-        if (username.isEmpty()) { mostraErrore("Scegli un username.", usernameField); return; }
-        if (password.isEmpty()) { mostraErrore("Inserisci una password.", passwordField); return; }
+        if (nome.isEmpty()) {
+            mostraErrore("Inserisci il tuo nome.", nomeField);
+            return;
+        }
+        if (cognome.isEmpty()) {
+            mostraErrore("Inserisci il tuo cognome.", cognomeField);
+            return;
+        }
+        if (username.isEmpty()) {
+            mostraErrore("Scegli un username.", usernameField);
+            return;
+        }
+        if (password.isEmpty()) {
+            mostraErrore("Inserisci una password.", passwordField);
+            return;
+        }
 
         try {
+            // Valida il domicilio se inserito
+            if (!domicilio.isEmpty()) {
+                boolean domicilioValido = service.validaDomicilio(domicilio);
+                if (!domicilioValido) {
+                    mostraErrore("Domicilio non trovato. Inserisci un indirizzo valido.", domicilioField);
+                    return;
+                }
+            }
+
             boolean ok = service.registrazione(
                     nome, cognome, username,
                     cifra(password),
@@ -89,7 +118,6 @@ public class RegisterController {
                     ruolo);
 
             if (ok) {
-                System.out.println("Registrazione completata per: " + username);
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("MainView.fxml"));
                 Parent root = loader.load();
                 Stage stage = new Stage();

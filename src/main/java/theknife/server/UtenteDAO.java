@@ -15,8 +15,9 @@ public class UtenteDAO {
     }
 
     public Utente autentica(String username, String passwordCifrata) {
-        String sql = "SELECT * FROM utenti WHERE username = ? AND password_hash = ?";
-        try (PreparedStatement ps = dbManager.getConnection().prepareStatement(sql)) {
+        String query = "SELECT * FROM utenti WHERE username = ? AND password_hash = ?";
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, username);
             ps.setString(2, passwordCifrata);
             ResultSet rs = ps.executeQuery();
@@ -37,11 +38,11 @@ public class UtenteDAO {
     public boolean registra(String nome, String cognome, String username,
             String passwordCifrata, String luogoDomicilio, String ruolo) throws SQLException {
         String query = """
-                INSERT INTO utenti
-                (nome, cognome, username, password_hash, indirizzo_geolocalizzato, ruolo)
+                INSERT INTO utenti (nome, cognome, username, password_hash, indirizzo_geolocalizzato, ruolo)
                 VALUES (?, ?, ?, ?, ?, ?::tipo_utente)
                 """;
-        try (PreparedStatement pstmt = dbManager.getConnection().prepareStatement(query)) {
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setString(1, nome);
             pstmt.setString(2, cognome);
             pstmt.setString(3, username);
@@ -54,7 +55,8 @@ public class UtenteDAO {
 
     public boolean aggiungiPreferito(int idUtente, int idRistorante) throws SQLException {
         String query = "INSERT INTO preferiti (id_utente, id_ristorante) VALUES (?, ?)";
-        try (PreparedStatement pstmt = dbManager.getConnection().prepareStatement(query)) {
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, idUtente);
             pstmt.setInt(2, idRistorante);
             return pstmt.executeUpdate() > 0;
@@ -63,7 +65,8 @@ public class UtenteDAO {
 
     public boolean rimuoviPreferito(int idUtente, int idRistorante) throws SQLException {
         String query = "DELETE FROM preferiti WHERE id_utente = ? AND id_ristorante = ?";
-        try (PreparedStatement pstmt = dbManager.getConnection().prepareStatement(query)) {
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, idUtente);
             pstmt.setInt(2, idRistorante);
             return pstmt.executeUpdate() > 0;
@@ -73,8 +76,7 @@ public class UtenteDAO {
     public List<Ristorante> visualizzaPreferiti(int idUtente) throws SQLException {
         List<Ristorante> lista = new ArrayList<>();
         String query = """
-                SELECT r.*, l.location, l.address, l.latitudine, l.longitudine,
-                       t.nome AS tipo_cucina
+                SELECT r.*, l.location, l.address, l.latitudine, l.longitudine, t.nome AS tipo_cucina
                 FROM ristorantitheknife r
                 JOIN preferiti p ON r.id = p.id_ristorante
                 JOIN luoghi l ON r.id_luogo = l.id
@@ -83,7 +85,8 @@ public class UtenteDAO {
                 WHERE p.id_utente = ?
                 GROUP BY r.id, l.location, l.address, l.latitudine, l.longitudine, t.nome
                 """;
-        try (PreparedStatement pstmt = dbManager.getConnection().prepareStatement(query)) {
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, idUtente);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
