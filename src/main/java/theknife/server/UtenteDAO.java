@@ -15,13 +15,18 @@ public class UtenteDAO {
     }
 
     public Utente autentica(String username, String passwordCifrata) {
-        String sql = "SELECT * FROM utenti WHERE username = ? AND password = ?";
+        String sql = "SELECT * FROM utenti WHERE username = ? AND password_hash = ?";
         try (PreparedStatement ps = dbManager.getConnection().prepareStatement(sql)) {
             ps.setString(1, username);
-            ps.setString(2, passwordCifrata); // SHA-256 hex
+            ps.setString(2, passwordCifrata);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                // costruisci e ritorna l'oggetto Utente
+                return new Utente(
+                        rs.getInt("id"),
+                        rs.getString("nome"),
+                        rs.getString("cognome"),
+                        rs.getString("username"),
+                        rs.getString("ruolo"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -30,31 +35,25 @@ public class UtenteDAO {
     }
 
     public boolean registra(String nome, String cognome, String username,
-            String passwordCifrata, String dataNascita,
-            String luogoDomicilio, String ruolo) throws SQLException {
+            String passwordCifrata, String luogoDomicilio, String ruolo) throws SQLException {
         String query = """
-                INSERT INTO Utenti
-                (nome, cognome, username, password, data_nascita, luogo_domicilio, ruolo)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO utenti
+                (nome, cognome, username, password_hash, indirizzo_geolocalizzato, ruolo)
+                VALUES (?, ?, ?, ?, ?, ?::tipo_utente)
                 """;
         try (PreparedStatement pstmt = dbManager.getConnection().prepareStatement(query)) {
             pstmt.setString(1, nome);
             pstmt.setString(2, cognome);
             pstmt.setString(3, username);
             pstmt.setString(4, passwordCifrata);
-            if (dataNascita != null && !dataNascita.isEmpty()) {
-                pstmt.setDate(5, Date.valueOf(dataNascita));
-            } else {
-                pstmt.setNull(5, Types.DATE);
-            }
-            pstmt.setString(6, luogoDomicilio);
-            pstmt.setString(7, ruolo);
+            pstmt.setString(5, luogoDomicilio);
+            pstmt.setString(6, ruolo);
             return pstmt.executeUpdate() > 0;
         }
     }
 
     public boolean aggiungiPreferito(int idUtente, int idRistorante) throws SQLException {
-        String query = "INSERT INTO Preferiti (id_utente, id_ristorante) VALUES (?, ?)";
+        String query = "INSERT INTO preferiti (id_utente, id_ristorante) VALUES (?, ?)";
         try (PreparedStatement pstmt = dbManager.getConnection().prepareStatement(query)) {
             pstmt.setInt(1, idUtente);
             pstmt.setInt(2, idRistorante);
@@ -63,7 +62,7 @@ public class UtenteDAO {
     }
 
     public boolean rimuoviPreferito(int idUtente, int idRistorante) throws SQLException {
-        String query = "DELETE FROM Preferiti WHERE id_utente = ? AND id_ristorante = ?";
+        String query = "DELETE FROM preferiti WHERE id_utente = ? AND id_ristorante = ?";
         try (PreparedStatement pstmt = dbManager.getConnection().prepareStatement(query)) {
             pstmt.setInt(1, idUtente);
             pstmt.setInt(2, idRistorante);
@@ -74,9 +73,15 @@ public class UtenteDAO {
     public List<Ristorante> visualizzaPreferiti(int idUtente) throws SQLException {
         List<Ristorante> lista = new ArrayList<>();
         String query = """
-                SELECT r.* FROM RistorantiTheKnife r
-                JOIN Preferiti p ON r.id = p.id_ristorante
+                SELECT r.*, l.location, l.address, l.latitudine, l.longitudine,
+                       t.nome AS tipo_cucina
+                FROM ristorantitheknife r
+                JOIN preferiti p ON r.id = p.id_ristorante
+                JOIN luoghi l ON r.id_luogo = l.id
+                LEFT JOIN ristorante_cucina rc ON r.id = rc.id_ristorante
+                LEFT JOIN tipicucina t ON rc.id_cucina = t.id
                 WHERE p.id_utente = ?
+                GROUP BY r.id, l.location, l.address, l.latitudine, l.longitudine, t.nome
                 """;
         try (PreparedStatement pstmt = dbManager.getConnection().prepareStatement(query)) {
             pstmt.setInt(1, idUtente);
@@ -85,16 +90,15 @@ public class UtenteDAO {
                     lista.add(new Ristorante(
                             rs.getInt("id"),
                             rs.getString("nome"),
-                            rs.getString("nazione"),
-                            rs.getString("citta"),
-                            rs.getString("indirizzo"),
+                            rs.getInt("id_proprietario"),
+                            rs.getString("location"),
+                            rs.getString("address"),
                             rs.getDouble("latitudine"),
                             rs.getDouble("longitudine"),
-                            rs.getDouble("prezzo_medio"),
+                            rs.getString("price"),
                             rs.getBoolean("delivery"),
-                            rs.getBoolean("prenotazione"),
-                            rs.getString("tipo_cucina"),
-                            rs.getInt("id_ristoratore")));
+                            rs.getBoolean("booking"),
+                            rs.getString("tipo_cucina")));
                 }
             }
         }

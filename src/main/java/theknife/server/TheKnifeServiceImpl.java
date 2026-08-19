@@ -22,18 +22,14 @@ public class TheKnifeServiceImpl implements TheKnifeService {
     }
 
     @Override
-    public Utente login(String username, String passwordCifrata)
-            throws RemoteException {
+    public Utente login(String username, String passwordCifrata) throws RemoteException {
         return utenteDAO.autentica(username, passwordCifrata);
     }
 
     @Override
-    public boolean registrazione(String nome, String cognome, String username,
-            String passwordCifrata, String dataNascita,
-            String luogoDomicilio, String ruolo) throws RemoteException {
+    public boolean registrazione(String nome, String cognome, String username, String passwordCifrata, String luogoDomicilio, String ruolo) throws RemoteException {
         try {
-            return utenteDAO.registra(nome, cognome, username,
-                passwordCifrata, dataNascita, luogoDomicilio, ruolo);
+            return utenteDAO.registra(nome, cognome, username, passwordCifrata, luogoDomicilio, ruolo);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -41,9 +37,7 @@ public class TheKnifeServiceImpl implements TheKnifeService {
     }
 
     @Override
-    public List<Ristorante> cercaRistorante(String citta, String cucina,
-            Double prezzoMax, Boolean delivery, Boolean prenotazione,
-            Integer stelleMin, int pagina) throws RemoteException {
+    public List<Ristorante> cercaRistorante(String citta, String cucina, Double prezzoMax, Boolean delivery, Boolean prenotazione, Integer stelleMin, int pagina) throws RemoteException {
         try {
             return ristoranteDAO.cerca(citta, cucina, prezzoMax,
                 delivery, prenotazione, stelleMin, pagina);
@@ -54,8 +48,7 @@ public class TheKnifeServiceImpl implements TheKnifeService {
     }
 
     @Override
-    public Ristorante visualizzaRistorante(int idRistorante)
-            throws RemoteException {
+    public Ristorante visualizzaRistorante(int idRistorante) throws RemoteException {
         try {
             return ristoranteDAO.findById(idRistorante);
         } catch (Exception e) {
@@ -65,8 +58,7 @@ public class TheKnifeServiceImpl implements TheKnifeService {
     }
 
     @Override
-    public List<Recensione> visualizzaRecensioni(int idRistorante)
-            throws RemoteException {
+    public List<Recensione> visualizzaRecensioni(int idRistorante) throws RemoteException {
         try {
             return recensioneDAO.findByRistorante(idRistorante);
         } catch (Exception e) {
@@ -76,8 +68,7 @@ public class TheKnifeServiceImpl implements TheKnifeService {
     }
 
     @Override
-    public boolean aggiungiPreferito(int idUtente, int idRistorante)
-            throws RemoteException {
+    public boolean aggiungiPreferito(int idUtente, int idRistorante) throws RemoteException {
         try {
             return utenteDAO.aggiungiPreferito(idUtente, idRistorante);
         } catch (Exception e) {
@@ -86,8 +77,7 @@ public class TheKnifeServiceImpl implements TheKnifeService {
     }
 
     @Override
-    public boolean rimuoviPreferito(int idUtente, int idRistorante)
-            throws RemoteException {
+    public boolean rimuoviPreferito(int idUtente, int idRistorante) throws RemoteException {
         try {
             return utenteDAO.rimuoviPreferito(idUtente, idRistorante);
         } catch (Exception e) {
@@ -96,8 +86,7 @@ public class TheKnifeServiceImpl implements TheKnifeService {
     }
 
     @Override
-    public List<Ristorante> visualizzaPreferiti(int idUtente)
-            throws RemoteException {
+    public List<Ristorante> visualizzaPreferiti(int idUtente) throws RemoteException {
         try {
             return utenteDAO.visualizzaPreferiti(idUtente);
         } catch (Exception e) {
@@ -106,8 +95,7 @@ public class TheKnifeServiceImpl implements TheKnifeService {
     }
 
     @Override
-    public boolean aggiungiRecensione(int idUtente, int idRistorante,
-            int stelle, String testo) throws RemoteException {
+    public boolean aggiungiRecensione(int idUtente, int idRistorante, int stelle, String testo) throws RemoteException {
         try {
             return recensioneDAO.inserisci(idUtente, idRistorante, stelle, testo);
         } catch (Exception e) {
@@ -116,8 +104,7 @@ public class TheKnifeServiceImpl implements TheKnifeService {
     }
 
     @Override
-    public boolean modificaRecensione(int idRecensione,
-            int stelle, String testo) throws RemoteException {
+    public boolean modificaRecensione(int idRecensione, int stelle, String testo) throws RemoteException {
         try {
             return recensioneDAO.modifica(idRecensione, stelle, testo);
         } catch (Exception e) {
@@ -126,8 +113,7 @@ public class TheKnifeServiceImpl implements TheKnifeService {
     }
 
     @Override
-    public boolean eliminaRecensione(int idRecensione)
-            throws RemoteException {
+    public boolean eliminaRecensione(int idRecensione) throws RemoteException {
         try {
             return recensioneDAO.elimina(idRecensione);
         } catch (Exception e) {
@@ -136,8 +122,7 @@ public class TheKnifeServiceImpl implements TheKnifeService {
     }
 
     @Override
-    public boolean aggiungiRistorante(Ristorante r)
-            throws RemoteException {
+    public boolean aggiungiRistorante(Ristorante r) throws RemoteException {
         try {
             return ristoranteDAO.inserisci(r);
         } catch (Exception e) {
@@ -146,8 +131,7 @@ public class TheKnifeServiceImpl implements TheKnifeService {
     }
 
     @Override
-    public boolean rispostaRecensione(int idRecensione, String risposta)
-            throws RemoteException {
+    public boolean rispostaRecensione(int idRecensione, String risposta) throws RemoteException {
         try {
             return recensioneDAO.aggiungiRisposta(idRecensione, risposta);
         } catch (Exception e) {
@@ -156,8 +140,7 @@ public class TheKnifeServiceImpl implements TheKnifeService {
     }
 
     @Override
-    public List<Ristorante> visualizzaRistorantiPropri(int idRistoratore)
-            throws RemoteException {
+    public List<Ristorante> visualizzaRistorantiPropri(int idRistoratore) throws RemoteException {
         try {
             return ristoranteDAO.findByRistoratore(idRistoratore);
         } catch (Exception e) {
@@ -168,8 +151,7 @@ public class TheKnifeServiceImpl implements TheKnifeService {
     public static void main(String[] args) {
         try {
             TheKnifeServiceImpl serverObj = new TheKnifeServiceImpl();
-            TheKnifeService stub = (TheKnifeService)
-                UnicastRemoteObject.exportObject(serverObj, 0);
+            TheKnifeService stub = (TheKnifeService) UnicastRemoteObject.exportObject(serverObj, 0);
             Registry registry = LocateRegistry.createRegistry(1099);
             registry.rebind("TheKnifeService", stub);
             System.out.println("Server TheKnife avviato sulla porta 1099.");

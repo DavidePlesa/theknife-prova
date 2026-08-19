@@ -52,13 +52,7 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<AnchorPane fx:controller="theknife.client.RegisterController"
-            maxHeight="-Infinity" maxWidth="-Infinity"
-            minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="620.0" prefWidth="600.0"
-            stylesheets="@main.css"
-            xmlns="http://javafx.com/javafx/26"
-            xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:controller="theknife.client.RegisterController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="600.0" stylesheets="@main.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <VBox alignment="CENTER"
               AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
@@ -66,21 +60,18 @@
             <children>
                 <VBox alignment="CENTER" maxWidth="400.0" prefWidth="200.0" style="-fx-spacing: 14;">
                     <children>
-                        <ImageView fitHeight="100.0" fitWidth="140.0"
-                                   pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="100.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true">
                             <VBox.margin><Insets top="16.0" /></VBox.margin>
                             <image><Image url="@The_Knife_logo.png" /></image>
                         </ImageView>
                         <Label text="Crea il tuo account">
                             <font><Font name="System Bold" size="18.0" /></font>
                         </Label>
-                        <TextField fx:id="nomeField"      promptText="Nome..." />
-                        <TextField fx:id="cognomeField"   promptText="Cognome..." />
-                        <TextField fx:id="usernameField"  promptText="Username..." />
-                        <PasswordField fx:id="passwordField"  promptText="Password..." />
-                        <PasswordField fx:id="confermaPasswordField" promptText="Conferma password..." />
+                        <TextField fx:id="nomeField" promptText="Nome..." />
+                        <TextField fx:id="cognomeField" promptText="Cognome..." />
+                        <TextField fx:id="usernameField" promptText="Username..." />
+                        <PasswordField fx:id="passwordField" promptText="Password..." />
                         <TextField fx:id="domicilioField" promptText="Luogo di domicilio..." />
-                        <DatePicker fx:id="dataNascitaPicker" promptText="Data di nascita" maxWidth="Infinity" />
                         <HBox spacing="20" alignment="CENTER">
                             <RadioButton fx:id="radioCliente" text="Cliente" selected="true">
                             <toggleGroup>
@@ -88,12 +79,8 @@
                             </RadioButton>
                             <RadioButton fx:id="radioRistoratore" text="Ristoratore" toggleGroup="$ruoloGroup" />
                         </HBox>
-                        <Label fx:id="errorLabel" text="" styleClass="error-label"
-                               visible="false" managed="false"
-                               maxWidth="Infinity" alignment="CENTER_LEFT" />
-                        <Button fx:id="btnRegistrati" id="btnAccedi"
-                                text="Registrati" onAction="#handleRegistrati"
-                                mnemonicParsing="false" />
+                        <Label fx:id="errorLabel" text="" styleClass="error-label" visible="false" managed="false" maxWidth="Infinity" alignment="CENTER_LEFT" />
+                        <Button fx:id="btnRegistrati" id="btnAccedi" text="Registrati" onAction="#handleRegistrati" mnemonicParsing="false" />
                         <TextFlow textAlignment="CENTER">
                             <VBox.margin><Insets bottom="12.0" /></VBox.margin>
                             <children>

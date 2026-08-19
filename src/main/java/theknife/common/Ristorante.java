@@ -6,30 +6,62 @@ public class Ristorante implements Serializable {
 
     private int id;
     private String nome;
-    private String nazione;
-    private String citta;
-    private String indirizzo;
+    private int idProprietario;
+    // Da luoghi
+    private String location; // nazione/città
+    private String address; // indirizzo
     private double latitudine;
     private double longitudine;
-    private double prezzoMedio;
+    // Da ristorantitheknife
+    private String price; // testo (es. "€€", "30-50€")
+    private String phoneNumber;
+    private String url;
+    private String websiteUrl;
+    private String award;
+    private boolean greenStar;
+    private String facilitiesAndServices;
+    private String description;
     private boolean delivery;
-    private boolean prenotazione;
+    private boolean booking; // prenotazione nel DB si chiama booking
+    // Da tipicucina (può essere multipla, ma per semplicità prendiamo la prima)
     private String tipoCucina;
-    private int idRistoratore;
 
-    public Ristorante(int id, String nome, String nazione, String citta, String indirizzo, double latitudine, double longitudine, double prezzoMedio, boolean delivery, boolean prenotazione, String tipoCucina, int idRistoratore) {
+    public Ristorante(int id, String nome, int idProprietario,
+            String location, String address,
+            double latitudine, double longitudine,
+            String price, String phoneNumber, String url,
+            String websiteUrl, String award, boolean greenStar,
+            String facilitiesAndServices, String description,
+            boolean delivery, boolean booking, String tipoCucina) {
         this.id = id;
         this.nome = nome;
-        this.nazione = nazione;
-        this.citta = citta;
-        this.indirizzo = indirizzo;
+        this.idProprietario = idProprietario;
+        this.location = location;
+        this.address = address;
         this.latitudine = latitudine;
         this.longitudine = longitudine;
-        this.prezzoMedio = prezzoMedio;
+        this.price = price;
+        this.phoneNumber = phoneNumber;
+        this.url = url;
+        this.websiteUrl = websiteUrl;
+        this.award = award;
+        this.greenStar = greenStar;
+        this.facilitiesAndServices = facilitiesAndServices;
+        this.description = description;
         this.delivery = delivery;
-        this.prenotazione = prenotazione;
+        this.booking = booking;
         this.tipoCucina = tipoCucina;
-        this.idRistoratore = idRistoratore;
+    }
+
+    // Costruttore compatto per liste/ricerca (senza tutti i dettagli)
+    public Ristorante(int id, String nome, int idProprietario,
+            String location, String address,
+            double latitudine, double longitudine,
+            String price, boolean delivery, boolean booking,
+            String tipoCucina) {
+        this(id, nome, idProprietario, location, address,
+                latitudine, longitudine, price, null, null,
+                null, null, false, null, null, delivery, booking, tipoCucina);
     }
 
     public int getId() {
@@ -40,16 +72,16 @@ public class Ristorante implements Serializable {
         return nome;
     }
 
-    public String getNazione() {
-        return nazione;
+    public int getIdProprietario() {
+        return idProprietario;
     }
 
-    public String getCitta() {
-        return citta;
+    public String getLocation() {
+        return location;
     }
 
-    public String getIndirizzo() {
-        return indirizzo;
+    public String getAddress() {
+        return address;
     }
 
     public double getLatitudine() {
@@ -60,23 +92,68 @@ public class Ristorante implements Serializable {
         return longitudine;
     }
 
-    public double getPrezzoMedio() {
-        return prezzoMedio;
+    public String getPrice() {
+        return price;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getWebsiteUrl() {
+        return websiteUrl;
+    }
+
+    public String getAward() {
+        return award;
+    }
+
+    public boolean isGreenStar() {
+        return greenStar;
+    }
+
+    public String getFacilitiesAndServices() {
+        return facilitiesAndServices;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public boolean isDelivery() {
         return delivery;
     }
 
-    public boolean isPrenotazione() {
-        return prenotazione;
+    public boolean isBooking() {
+        return booking;
     }
 
     public String getTipoCucina() {
         return tipoCucina;
     }
 
+    // Alias per compatibilità col codice esistente
+    public boolean isPrenotazione() {
+        return booking;
+    }
+
+    public String getNazione() {
+        return location;
+    }
+
+    public String getCitta() {
+        return location;
+    }
+
+    public String getIndirizzo() {
+        return address;
+    }
+
     public int getIdRistoratore() {
-        return idRistoratore;
+        return idProprietario;
     }
 }

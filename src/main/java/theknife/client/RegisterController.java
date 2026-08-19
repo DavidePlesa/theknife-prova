@@ -1,47 +1,35 @@
 package theknife.client;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Control;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import theknife.common.TheKnifeService;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.security.MessageDigest;
-import java.time.LocalDate;
 
 public class RegisterController {
 
-    @FXML
-    private TextField nomeField;
-    @FXML
-    private TextField cognomeField;
-    @FXML
-    private TextField usernameField;
-    @FXML
-    private PasswordField passwordField;
-    @FXML
-    private PasswordField confermaPasswordField;
-    @FXML
-    private TextField domicilioField;
-    @FXML
-    private DatePicker dataNascitaPicker;
-    @FXML
-    private RadioButton radioCliente;
-    @FXML
-    private RadioButton radioRistoratore;
-    @FXML
-    private Label errorLabel;
+    @FXML private TextField nomeField;
+    @FXML private TextField cognomeField;
+    @FXML private TextField usernameField;
+    @FXML private PasswordField passwordField;
+    @FXML private TextField domicilioField;
+    @FXML private RadioButton radioCliente;
+    @FXML private RadioButton radioRistoratore;
+    @FXML private Label errorLabel;
 
     private static final String CLASS_OK = "field-ok";
     private static final String CLASS_ERROR = "field-error";
+    private TheKnifeService service;
 
-    private TheKnifeService getService() throws Exception {
-        Registry registry = LocateRegistry.getRegistry("localhost", 1099);
-        return (TheKnifeService) registry.lookup("TheKnifeService");
+    public void init(TheKnifeService service) {
+        this.service = service;
     }
 
     private String cifra(String password) {
@@ -63,11 +51,8 @@ public class RegisterController {
     }
 
     private void resetStato() {
-        for (Control c : new Control[] {
-                nomeField, cognomeField, usernameField,
-                passwordField, confermaPasswordField, domicilioField }) {
+        for (Control c : new Control[]{nomeField, cognomeField, usernameField, passwordField, domicilioField})
             setFieldState(c, false);
-        }
         errorLabel.setVisible(false);
         errorLabel.setManaged(false);
     }
@@ -88,50 +73,33 @@ public class RegisterController {
         String cognome = cognomeField.getText().trim();
         String username = usernameField.getText().trim();
         String password = passwordField.getText();
-        String conferma = confermaPasswordField.getText();
         String domicilio = domicilioField.getText().trim();
-        LocalDate dataNascita = dataNascitaPicker.getValue();
         String ruolo = radioCliente.isSelected() ? "cliente" : "ristoratore";
 
-        if (nome.isEmpty()) {
-            mostraErrore("Inserisci il tuo nome.", nomeField);
-            return;
-        }
-        if (cognome.isEmpty()) {
-            mostraErrore("Inserisci il tuo cognome.", cognomeField);
-            return;
-        }
-        if (username.isEmpty()) {
-            mostraErrore("Scegli un username.", usernameField);
-            return;
-        }
-        if (password.isEmpty()) {
-            mostraErrore("Inserisci una password.", passwordField);
-            return;
-        }
-        if (!password.equals(conferma)) {
-            mostraErrore("Le password non coincidono.", passwordField, confermaPasswordField);
-            return;
-        }
+        if (nome.isEmpty()) { mostraErrore("Inserisci il tuo nome.", nomeField); return; }
+        if (cognome.isEmpty()) { mostraErrore("Inserisci il tuo cognome.", cognomeField); return; }
+        if (username.isEmpty()) { mostraErrore("Scegli un username.", usernameField); return; }
+        if (password.isEmpty()) { mostraErrore("Inserisci una password.", passwordField); return; }
 
         try {
-            TheKnifeService service = getService();
-            String dataNascitaStr = dataNascita != null ? dataNascita.toString() : null;
-
             boolean ok = service.registrazione(
                     nome, cognome, username,
                     cifra(password),
-                    dataNascitaStr,
                     domicilio.isEmpty() ? null : domicilio,
                     ruolo);
 
             if (ok) {
                 System.out.println("Registrazione completata per: " + username);
-                // TODO: torna al login o apri la HomeView
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("MainView.fxml"));
+                Parent root = loader.load();
+                Stage stage = new Stage();
+                stage.setTitle("TheKnife - Login");
+                stage.setScene(new Scene(root));
+                stage.show();
+                ((Stage) nomeField.getScene().getWindow()).close();
             } else {
                 mostraErrore("Username già in uso. Scegline un altro.", usernameField);
             }
-
         } catch (Exception e) {
             mostraErrore("Impossibile contattare il server: " + e.getMessage());
             e.printStackTrace();
@@ -140,7 +108,16 @@ public class RegisterController {
 
     @FXML
     private void handleTornaLogin() {
-        System.out.println("Torna al login");
-        // TODO: carica la MainView
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("MainView.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("TheKnife - Login");
+            stage.setScene(new Scene(root));
+            stage.show();
+            ((Stage) nomeField.getScene().getWindow()).close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

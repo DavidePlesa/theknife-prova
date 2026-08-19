@@ -5,7 +5,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import theknife.common.TheKnifeService;
+import theknife.common.Utente;
 
 public class HomeController {
 
@@ -25,14 +28,29 @@ public class HomeController {
 
     // --- Center ---
     @FXML private Label labelRisultati;
-    @FXML private javafx.scene.layout.GridPane gridPane;
+    @FXML private GridPane gridPane;
     @FXML private Button btnPrev;
     @FXML private Button btnNext;
     @FXML private Label labelPagina;
 
+    private TheKnifeService service;
+    private Utente utente;
+
+    public void init(Utente utente, TheKnifeService service) {
+        this.utente = utente;
+        this.service = service;
+
+        if (utente != null) {
+            benvenutoLabel.setText("Ciao, " + utente.getNome() + "!");
+            inizialeLabel.setText(String.valueOf(utente.getNome().charAt(0)).toUpperCase());
+        } else {
+            benvenutoLabel.setText("Ciao, ospite!");
+            inizialeLabel.setText("?");
+        }
+    }
+
     @FXML
     public void initialize() {
-        // Slider → update label
         sliderRaggio.valueProperty().addListener((obs, oldVal, newVal) ->
             raggioValore.setText((int) newVal.doubleValue() + " km")
         );
@@ -41,6 +59,21 @@ public class HomeController {
     @FXML
     private void handleCerca() {
         System.out.println("Avvio ricerca ristoranti...");
-        // TODO: Inserisci qui la logica di ricerca basata sui filtri selezionati
+        // TODO: logica di ricerca con this.service
+    }
+
+    @FXML
+    private void handleLogout() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("MainView.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("TheKnife - Login");
+            stage.setScene(new Scene(root));
+            stage.show();
+            ((Stage) benvenutoLabel.getScene().getWindow()).close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

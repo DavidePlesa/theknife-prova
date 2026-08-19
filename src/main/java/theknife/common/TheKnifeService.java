@@ -8,7 +8,7 @@ public interface TheKnifeService extends Remote {
 
     // Auth
     Utente login(String username, String passwordCifrata) throws RemoteException;
-    boolean registrazione(String nome, String cognome, String username, String passwordCifrata, String dataNascita, String luogoDomicilio, String ruolo) throws RemoteException;
+    boolean registrazione(String nome, String cognome, String username, String passwordCifrata, String luogoDomicilio, String ruolo) throws RemoteException;
 
     // Ricerca ristoranti
     List<Ristorante> cercaRistorante(String citta, String cucina, Double prezzoMax, Boolean delivery, Boolean prenotazione, Integer stelleMin, int pagina) throws RemoteException;
