@@ -164,14 +164,14 @@ public class TheKnifeServiceImpl implements TheKnifeService {
     }
 
     public static void main(String[] args) {
-        try {
-            TheKnifeServiceImpl serverObj = new TheKnifeServiceImpl();
-            TheKnifeService stub = (TheKnifeService) UnicastRemoteObject.exportObject(serverObj, 0);
-            Registry registry = LocateRegistry.createRegistry(1099);
-            registry.rebind("TheKnifeService", stub);
-            System.out.println("Server TheKnife avviato sulla porta 1099.");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    try {
+        TheKnifeServiceFactoryImpl factory = new TheKnifeServiceFactoryImpl();
+        Registry registry = LocateRegistry.createRegistry(1099);
+        registry.rebind("TheKnifeFactory", factory);
+        System.out.println("Server TheKnife avviato sulla porta 1099.");
+    } catch (Exception e) {
+        System.err.println("Errore nell'avvio del server RMI:");
+        e.printStackTrace();
     }
+}
 }

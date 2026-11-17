@@ -41,10 +41,10 @@ public class HomeController {
         this.service = service;
 
         if (utente != null) {
-            benvenutoLabel.setText("Ciao, " + utente.getNome() + "!");
+            benvenutoLabel.setText(utente.getNome() + "!");
             inizialeLabel.setText(String.valueOf(utente.getNome().charAt(0)).toUpperCase());
         } else {
-            benvenutoLabel.setText("Ciao, ospite!");
+            benvenutoLabel.setText("Guest!");
             inizialeLabel.setText("?");
         }
     }

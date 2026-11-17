@@ -3,6 +3,8 @@ package theknife.server;
 import theknife.common.TheKnifeService;
 import theknife.common.TheKnifeServiceFactory;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 public class TheKnifeServiceFactoryImpl extends UnicastRemoteObject implements TheKnifeServiceFactory {
@@ -13,7 +15,12 @@ public class TheKnifeServiceFactoryImpl extends UnicastRemoteObject implements T
 
     @Override
     public TheKnifeService getService() throws RemoteException {
-        TheKnifeServiceImpl service = new TheKnifeServiceImpl();
-        return (TheKnifeService) UnicastRemoteObject.exportObject(service, 0);
+        try {
+            TheKnifeServiceImpl service = new TheKnifeServiceImpl();
+            return (TheKnifeService) UnicastRemoteObject.exportObject(service, 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RemoteException("Impossibile creare TheKnifeServiceImpl: " + e.getMessage(), e);
+        }
     }
 }
