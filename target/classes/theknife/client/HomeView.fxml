@@ -54,7 +54,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 
-<BorderPane fx:controller="theknife.client.HomeController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" stylesheets="@home.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:controller="theknife.client.HomeController" prefHeight="600.0" prefWidth="800.0" stylesheets="@home.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <!-- TOPBAR -->
    <top>
       <HBox fx:id="topbar" alignment="CENTER_LEFT" prefHeight="52.0" spacing="9.0" BorderPane.alignment="CENTER_LEFT">

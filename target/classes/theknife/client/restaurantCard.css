@@ -4,18 +4,18 @@
     -fx-border-color: #2a2a2a;
     -fx-border-width: 1;
     -fx-border-radius: 10;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.45), 10, 0, 0, 3);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.45), 10, 0, 0, 3);
     -fx-cursor: hand;
 }
 
 .ristorante-card:hover {
     -fx-background-color: #232323;
-    -fx-border-color: #3a3a3a;
+    -fx-border-color: rgba(34, 197, 94, 0.45);
 }
 
 .card-nome {
     -fx-text-fill: white;
-    -fx-font-size: 17px;
+    -fx-font-size: 16px;
     -fx-font-weight: bold;
 }
 
@@ -25,23 +25,6 @@
 }
 
 .card-localita {
-    -fx-text-fill: #c7c7c7;
+    -fx-text-fill: #a1a1aa;
     -fx-font-size: 12px;
-}
-
-/* Badge base — comune a tutti i tag */
-.tag {
-    -fx-background-radius: 5;
-    -fx-padding: 3 10 3 10;
-    -fx-text-fill: white;
-    -fx-font-size: 11px;
-    -fx-font-weight: bold;
-}
-
-.tag-delivery {
-    -fx-background-color: #e8821e;
-}
-
-.tag-prenotabile {
-    -fx-background-color: #27ae60;
 }

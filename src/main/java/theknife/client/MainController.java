@@ -3,15 +3,14 @@ package theknife.client;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import theknife.common.TheKnifeService;
 import theknife.common.TheKnifeServiceFactory;
 import theknife.common.Utente;
+
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.security.MessageDigest;
@@ -92,11 +91,7 @@ public class MainController {
                 Parent root = loader.load();
                 HomeController controller = loader.getController();
                 controller.init(utente, service);
-                Stage stage = new Stage();
-                stage.setTitle("TheKnife - Home");
-                stage.setScene(new Scene(root));
-                stage.show();
-                ((Stage) usernameField.getScene().getWindow()).close();
+                SceneManager.cambiaView(usernameField, root, "TheKnife - Home");
             } else {
                 mostraErrore("Username o password errati.", true, true);
             }
@@ -114,11 +109,7 @@ public class MainController {
             Parent root = loader.load();
             HomeController controller = loader.getController();
             controller.init(null, service);
-            Stage stage = new Stage();
-            stage.setTitle("TheKnife - Home");
-            stage.setScene(new Scene(root));
-            stage.show();
-            ((Stage) usernameField.getScene().getWindow()).close();
+            SceneManager.cambiaView(usernameField, root, "TheKnife - Home");
         } catch (Exception e) {
             mostraErrore("Impossibile contattare il server: " + e.getMessage(), false, false);
             e.printStackTrace();
@@ -133,11 +124,7 @@ public class MainController {
             Parent root = loader.load();
             RegisterController controller = loader.getController();
             controller.init(service);
-            Stage stage = new Stage();
-            stage.setTitle("TheKnife - Registrazione");
-            stage.setScene(new Scene(root));
-            stage.show();
-            ((Stage) usernameField.getScene().getWindow()).close();
+            SceneManager.cambiaView(usernameField, root, "TheKnife - Registrazione");
         } catch (Exception e) {
             mostraErrore("Impossibile contattare il server: " + e.getMessage(), false, false);
             e.printStackTrace();

@@ -3,34 +3,25 @@ package theknife.client;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import theknife.common.TheKnifeService;
+
 import java.security.MessageDigest;
 
 public class RegisterController {
 
-    @FXML
-    private TextField nomeField;
-    @FXML
-    private TextField cognomeField;
-    @FXML
-    private TextField usernameField;
-    @FXML
-    private PasswordField passwordField;
-    @FXML
-    private TextField domicilioField;
-    @FXML
-    private RadioButton radioCliente;
-    @FXML
-    private RadioButton radioRistoratore;
-    @FXML
-    private Label errorLabel;
+    @FXML private TextField nomeField;
+    @FXML private TextField cognomeField;
+    @FXML private TextField usernameField;
+    @FXML private PasswordField passwordField;
+    @FXML private TextField domicilioField;
+    @FXML private RadioButton radioCliente;
+    @FXML private RadioButton radioRistoratore;
+    @FXML private Label errorLabel;
 
     private static final String CLASS_OK = "field-ok";
     private static final String CLASS_ERROR = "field-error";
@@ -102,7 +93,6 @@ public class RegisterController {
         }
 
         try {
-            // Valida il domicilio se inserito
             if (!domicilio.isEmpty()) {
                 boolean domicilioValido = service.validaDomicilio(domicilio);
                 if (!domicilioValido) {
@@ -120,11 +110,7 @@ public class RegisterController {
             if (ok) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("MainView.fxml"));
                 Parent root = loader.load();
-                Stage stage = new Stage();
-                stage.setTitle("TheKnife - Login");
-                stage.setScene(new Scene(root));
-                stage.show();
-                ((Stage) nomeField.getScene().getWindow()).close();
+                SceneManager.cambiaView(nomeField, root, "TheKnife - Login");
             } else {
                 mostraErrore("Username già in uso. Scegline un altro.", usernameField);
             }
@@ -139,11 +125,7 @@ public class RegisterController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("MainView.fxml"));
             Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.setTitle("TheKnife - Login");
-            stage.setScene(new Scene(root));
-            stage.show();
-            ((Stage) nomeField.getScene().getWindow()).close();
+            SceneManager.cambiaView(nomeField, root, "TheKnife - Login");
         } catch (Exception e) {
             e.printStackTrace();
         }
