@@ -37,7 +37,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="4" styleClass="ristorante-card" stylesheets="@restaurantCard.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" >
+<VBox spacing="4" styleClass="ristorante-card" fx:controller="theknife.client.RestaurantCardController" stylesheets="@restaurantCard.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" >
     <padding>
         <Insets top="12" right="12" bottom="12" left="12" />
     </padding>

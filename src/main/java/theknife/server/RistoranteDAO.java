@@ -31,30 +31,44 @@ public class RistoranteDAO {
         if (stelleMin != null)
             query.append("LEFT JOIN recensioni rec ON r.id = rec.id_ristorante ");
 
-        query.append("WHERE LOWER(l.location) LIKE LOWER(?) ");
+        // Base sempre vera: permette di accodare solo gli AND necessari
+        query.append("WHERE 1=1 ");
 
-        if (cucina != null)       query.append("AND LOWER(t.nome) = LOWER(?) ");
-        if (delivery != null)     query.append("AND r.delivery = ? ");
-        if (prenotazione != null) query.append("AND r.booking = ? ");
+        boolean hasLocation = location != null && !location.isBlank();
+        boolean hasCucina = cucina != null && !cucina.isBlank();
+
+        if (hasLocation)
+            query.append("AND LOWER(l.location) LIKE LOWER(?) ");
+        if (hasCucina)
+            query.append("AND LOWER(t.nome) = LOWER(?) ");
+        if (delivery != null)
+            query.append("AND r.delivery = ? ");
+        if (prenotazione != null)
+            query.append("AND r.booking = ? ");
+
+        query.append("GROUP BY r.id, l.location, l.address, l.latitudine, l.longitudine, t.nome ");
 
         if (stelleMin != null)
-            query.append("GROUP BY r.id, l.location, l.address, l.latitudine, l.longitudine, t.nome ")
-                 .append("HAVING AVG(rec.voto) >= ? ");
-        else
-            query.append("GROUP BY r.id, l.location, l.address, l.latitudine, l.longitudine, t.nome ");
+            query.append("HAVING AVG(rec.voto) >= ? ");
 
-        query.append("LIMIT ? OFFSET ?");
+        query.append("ORDER BY r.id LIMIT ? OFFSET ?");
 
         try (Connection conn = dbManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query.toString())) {
+                PreparedStatement pstmt = conn.prepareStatement(query.toString())) {
             int i = 1;
-            pstmt.setString(i++, "%" + location + "%");
-            if (cucina != null)        pstmt.setString(i++, cucina);
-            if (delivery != null)      pstmt.setBoolean(i++, delivery);
-            if (prenotazione != null)  pstmt.setBoolean(i++, prenotazione);
-            if (stelleMin != null)     pstmt.setInt(i++, stelleMin);
+            if (hasLocation)
+                pstmt.setString(i++, "%" + location.trim() + "%");
+            if (hasCucina)
+                pstmt.setString(i++, cucina.trim());
+            if (delivery != null)
+                pstmt.setBoolean(i++, delivery);
+            if (prenotazione != null)
+                pstmt.setBoolean(i++, prenotazione);
+            if (stelleMin != null)
+                pstmt.setInt(i++, stelleMin);
             pstmt.setInt(i++, pageSize);
             pstmt.setInt(i, offset);
+
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next())
                     lista.add(mapRistoranteCompatto(rs));
@@ -74,7 +88,7 @@ public class RistoranteDAO {
                 WHERE r.id = ?
                 """;
         try (Connection conn = dbManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, id);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next())
@@ -109,7 +123,8 @@ public class RistoranteDAO {
                     pstmt.setDouble(4, r.getLongitudine());
                     pstmt.executeUpdate();
                     try (ResultSet keys = pstmt.getGeneratedKeys()) {
-                        if (!keys.next()) throw new SQLException("Inserimento luogo fallito");
+                        if (!keys.next())
+                            throw new SQLException("Inserimento luogo fallito");
                         idLuogo = keys.getInt(1);
                     }
                 }
@@ -152,7 +167,7 @@ public class RistoranteDAO {
                 GROUP BY r.id, l.location, l.address, l.latitudine, l.longitudine, t.nome
                 """;
         try (Connection conn = dbManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, idRistoratore);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next())
@@ -164,40 +179,38 @@ public class RistoranteDAO {
 
     private Ristorante mapRistoranteCompleto(ResultSet rs) throws SQLException {
         return new Ristorante(
-            rs.getInt("id"),
-            rs.getString("nome"),
-            rs.getInt("id_proprietario"),
-            rs.getString("location"),
-            rs.getString("address"),
-            rs.getDouble("latitudine"),
-            rs.getDouble("longitudine"),
-            rs.getString("price"),
-            rs.getString("phone_number"),
-            rs.getString("url"),
-            rs.getString("website_url"),
-            rs.getString("award"),
-            rs.getBoolean("green_star"),
-            rs.getString("facilities_and_services"),
-            rs.getString("description"),
-            rs.getBoolean("delivery"),
-            rs.getBoolean("booking"),
-            rs.getString("tipo_cucina")
-        );
+                rs.getInt("id"),
+                rs.getString("nome"),
+                rs.getInt("id_proprietario"),
+                rs.getString("location"),
+                rs.getString("address"),
+                rs.getDouble("latitudine"),
+                rs.getDouble("longitudine"),
+                rs.getString("price"),
+                rs.getString("phone_number"),
+                rs.getString("url"),
+                rs.getString("website_url"),
+                rs.getString("award"),
+                rs.getBoolean("green_star"),
+                rs.getString("facilities_and_services"),
+                rs.getString("description"),
+                rs.getBoolean("delivery"),
+                rs.getBoolean("booking"),
+                rs.getString("tipo_cucina"));
     }
 
     private Ristorante mapRistoranteCompatto(ResultSet rs) throws SQLException {
         return new Ristorante(
-            rs.getInt("id"),
-            rs.getString("nome"),
-            rs.getInt("id_proprietario"),
-            rs.getString("location"),
-            rs.getString("address"),
-            rs.getDouble("latitudine"),
-            rs.getDouble("longitudine"),
-            rs.getString("price"),
-            rs.getBoolean("delivery"),
-            rs.getBoolean("booking"),
-            rs.getString("tipo_cucina")
-        );
+                rs.getInt("id"),
+                rs.getString("nome"),
+                rs.getInt("id_proprietario"),
+                rs.getString("location"),
+                rs.getString("address"),
+                rs.getDouble("latitudine"),
+                rs.getDouble("longitudine"),
+                rs.getString("price"),
+                rs.getBoolean("delivery"),
+                rs.getBoolean("booking"),
+                rs.getString("tipo_cucina"));
     }
 }

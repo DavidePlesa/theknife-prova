@@ -168,7 +168,7 @@
             </VBox>
             <Separator opacity="0.9" />
             <!-- Logout -->
-            <Button fx:id="btnLogout" mnemonicParsing="false" text="Logout / Esci ↩" />
+            <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#handleLogout" text="Logout / Esci ↩" />
          </children>
       </VBox>
    </left>
@@ -207,9 +207,9 @@
             <!-- Footer paginazione -->
             <HBox fx:id="footerBox" alignment="CENTER_LEFT" spacing="8.0">
                <children>
-                  <Button fx:id="btnPrev" mnemonicParsing="false" text="&lt;" />
+                  <Button fx:id="btnPrev" mnemonicParsing="false" onAction="#handlePrev" text="&lt;" />
                   <Label fx:id="labelPagina" text="Pagina: N/A" />
-                  <Button fx:id="btnNext" mnemonicParsing="false" text="&gt;" />
+                  <Button fx:id="btnNext" mnemonicParsing="false" onAction="#handleNext" text="&gt;" />
                   <Region HBox.hgrow="ALWAYS" />
                   <Button id="btnAvviaRicerca" mnemonicParsing="false" onAction="#handleCerca" text="Avvia Ricerca" />
                </children>
