@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Client extends Application {
+
     @Override
     public void start(Stage primaryStage) {
         try {
@@ -18,12 +19,18 @@ public class Client extends Application {
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (IOException e) {
-            System.err.println("Errore durante il caricamento del file FXM");
+            System.err.println("Errore durante il caricamento del file FXML");
             e.printStackTrace();
         }
     }
 
+    @Override
+    public void stop() {
+        GestoreRichieste.getInstance().chiudi();
+    }
+
     public static void main(String[] args) {
+        System.setProperty("sun.rmi.transport.tcp.responseTimeout", "5000");
         launch(args);
     }
 }

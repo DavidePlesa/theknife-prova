@@ -1,13 +1,13 @@
 package theknife.client;
 
-import javafx.concurrent.Task;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import theknife.common.Ristorante;
-import theknife.common.TheKnifeService;
 import theknife.common.Utente;
 
 import java.util.List;
@@ -38,13 +38,12 @@ public class HomeController {
     @FXML private Button btnNext;
     @FXML private Label labelPagina;
 
-    private TheKnifeService service;
     private Utente utente;
     private int paginaCorrente = 1;
+    private int numeroRichiesta = 0; // solo thread JavaFX
 
-    public void init(Utente utente, TheKnifeService service) {
+    public void init(Utente utente) {
         this.utente = utente;
-        this.service = service;
 
         if (utente != null) {
             benvenutoLabel.setText(utente.getNome() + "!");
@@ -58,8 +57,12 @@ public class HomeController {
 
     @FXML
     public void initialize() {
-        sliderRaggio.valueProperty()
-                .addListener((obs, oldVal, newVal) -> raggioValore.setText((int) newVal.doubleValue() + " km"));
+        sliderRaggio.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> obs, Number oldVal, Number newVal) {
+                raggioValore.setText(newVal.intValue() + " km");
+            }
+        });
 
         if (spinnerValutazione.getValueFactory() == null) {
             spinnerValutazione.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 5, 0));
@@ -87,42 +90,45 @@ public class HomeController {
     }
 
     private void caricaRistoranti() {
-        if (service == null)
-            return;
-
-        String citta = normalizzaCombo(comboCitta);
-        String cucina = normalizzaCombo(comboCucina);
-        Double prezzoMax = null;
-        Boolean delivery = checkDelivery.isSelected() ? true : null;
-        Boolean prenotazione = checkPrenotazione.isSelected() ? true : null;
+        final String citta = normalizzaCombo(comboCitta);
+        final String cucina = normalizzaCombo(comboCucina);
+        final Double prezzoMax = null;
+        final Boolean delivery = checkDelivery.isSelected() ? Boolean.TRUE : null;
+        final Boolean prenotazione = checkPrenotazione.isSelected() ? Boolean.TRUE : null;
 
         Integer valStelle = spinnerValutazione.getValue();
-        Integer stelleMin = (valStelle != null && valStelle > 0) ? valStelle : null;
+        final Integer stelleMin = (valStelle != null && valStelle > 0) ? valStelle : null;
 
-        final int pagina = this.paginaCorrente;
+        final int pagina = paginaCorrente;
+        final int idRichiesta = ++numeroRichiesta;
 
         labelRisultati.setText("Ricerca in corso...");
         btnPrev.setDisable(true);
         btnNext.setDisable(true);
 
-        Task<List<Ristorante>> task = new Task<>() {
-            @Override
-            protected List<Ristorante> call() throws Exception {
-                return service.cercaRistorante(citta, cucina, prezzoMax, delivery, prenotazione, stelleMin, pagina);
-            }
-        };
+        GestoreRichieste.getInstance().esegui(
+            new Operazione<List<Ristorante>>() {
+                @Override
+                public List<Ristorante> esegui() throws Exception {
+                    return GestoreRichieste.getInstance().getService().cercaRistorante(
+                            citta, cucina, prezzoMax, delivery, prenotazione, stelleMin, pagina);
+                }
+            },
+            new Esito<List<Ristorante>>() {
+                @Override
+                public void successo(List<Ristorante> risultato) {
+                    if (idRichiesta != numeroRichiesta) return; // risposta obsoleta
+                    aggiornaGriglia(risultato);
+                }
 
-        task.setOnSucceeded(e -> aggiornaGriglia(task.getValue()));
-
-        task.setOnFailed(e -> {
-            task.getException().printStackTrace();
-            labelRisultati.setText("Errore di connessione al server.");
-            btnPrev.setDisable(paginaCorrente <= 1);
-        });
-
-        Thread t = new Thread(task);
-        t.setDaemon(true);
-        t.start();
+                @Override
+                public void errore(Exception e) {
+                    if (idRichiesta != numeroRichiesta) return;
+                    e.printStackTrace();
+                    labelRisultati.setText("Errore di connessione al server.");
+                    btnPrev.setDisable(paginaCorrente <= 1);
+                }
+            });
     }
 
     private void aggiornaGriglia(List<Ristorante> ristoranti) {
@@ -141,7 +147,7 @@ public class HomeController {
 
         for (Ristorante r : ristoranti) {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/theknife/client/RestaurantCardView.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("RestaurantCardView.fxml"));
                 Parent card = loader.load();
 
                 RestaurantCardController cardController = loader.getController();
@@ -173,6 +179,7 @@ public class HomeController {
 
     @FXML
     private void handleLogout() {
+        numeroRichiesta++; // eventuali risposte in arrivo vengono scartate
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("MainView.fxml"));
             Parent root = loader.load();

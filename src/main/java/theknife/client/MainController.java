@@ -7,12 +7,8 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import theknife.common.TheKnifeService;
-import theknife.common.TheKnifeServiceFactory;
 import theknife.common.Utente;
 
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.security.MessageDigest;
 
 public class MainController {
@@ -24,11 +20,7 @@ public class MainController {
     private static final String CLASS_OK = "field-ok";
     private static final String CLASS_ERROR = "field-error";
 
-    private TheKnifeService getService() throws Exception {
-        Registry registry = LocateRegistry.getRegistry("localhost", 1099);
-        TheKnifeServiceFactory factory = (TheKnifeServiceFactory) registry.lookup("TheKnifeFactory");
-        return factory.getService();
-    }
+    private boolean inAttesa = false; // solo thread JavaFX
 
     private String cifra(String password) {
         try {
@@ -65,9 +57,10 @@ public class MainController {
 
     @FXML
     private void handleLogin() {
+        if (inAttesa) return;
         resetStato();
-        String username = usernameField.getText().trim();
-        String password = passwordField.getText();
+        final String username = usernameField.getText().trim();
+        final String password = passwordField.getText();
 
         if (username.isEmpty() && password.isEmpty()) {
             mostraErrore("Inserisci username e password.", true, true);
@@ -82,51 +75,89 @@ public class MainController {
             return;
         }
 
-        try {
-            TheKnifeService service = getService();
-            Utente utente = service.login(username, cifra(password));
+        inAttesa = true;
+        final String passwordCifrata = cifra(password);
 
-            if (utente != null) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("HomeView.fxml"));
-                Parent root = loader.load();
-                HomeController controller = loader.getController();
-                controller.init(utente, service);
-                SceneManager.cambiaView(usernameField, root, "TheKnife - Home");
-            } else {
-                mostraErrore("Username o password errati.", true, true);
-            }
-        } catch (Exception e) {
-            mostraErrore("Impossibile contattare il server: " + e.getMessage(), false, false);
-            e.printStackTrace();
-        }
+        GestoreRichieste.getInstance().esegui(
+            new Operazione<Utente>() {
+                @Override
+                public Utente esegui() throws Exception {
+                    return GestoreRichieste.getInstance().getService().login(username, passwordCifrata);
+                }
+            },
+            new Esito<Utente>() {
+                @Override
+                public void successo(Utente utente) {
+                    inAttesa = false;
+                    if (usernameField.getScene() == null) return;
+                    if (utente == null) {
+                        mostraErrore("Username o password errati.", true, true);
+                        return;
+                    }
+                    apriHome(utente);
+                }
+
+                @Override
+                public void errore(Exception e) {
+                    inAttesa = false;
+                    mostraErrore("Impossibile contattare il server: " + e.getMessage(), false, false);
+                    e.printStackTrace();
+                }
+            });
     }
 
     @FXML
     private void handleGuest() {
-        try {
-            TheKnifeService service = getService();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("HomeView.fxml"));
-            Parent root = loader.load();
-            HomeController controller = loader.getController();
-            controller.init(null, service);
-            SceneManager.cambiaView(usernameField, root, "TheKnife - Home");
-        } catch (Exception e) {
-            mostraErrore("Impossibile contattare il server: " + e.getMessage(), false, false);
-            e.printStackTrace();
-        }
+        if (inAttesa) return;
+        resetStato();
+        inAttesa = true;
+
+        GestoreRichieste.getInstance().esegui(
+            new Operazione<Boolean>() {
+                @Override
+                public Boolean esegui() throws Exception {
+                    GestoreRichieste.getInstance().getService(); // verifica che il server risponda
+                    return Boolean.TRUE;
+                }
+            },
+            new Esito<Boolean>() {
+                @Override
+                public void successo(Boolean ok) {
+                    inAttesa = false;
+                    if (usernameField.getScene() == null) return;
+                    apriHome(null);
+                }
+
+                @Override
+                public void errore(Exception e) {
+                    inAttesa = false;
+                    mostraErrore("Impossibile contattare il server: " + e.getMessage(), false, false);
+                    e.printStackTrace();
+                }
+            });
     }
 
     @FXML
     private void handleRegistrati() {
         try {
-            TheKnifeService service = getService();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("RegisterView.fxml"));
             Parent root = loader.load();
-            RegisterController controller = loader.getController();
-            controller.init(service);
             SceneManager.cambiaView(usernameField, root, "TheKnife - Registrazione");
         } catch (Exception e) {
-            mostraErrore("Impossibile contattare il server: " + e.getMessage(), false, false);
+            mostraErrore("Errore nel caricamento della vista.", false, false);
+            e.printStackTrace();
+        }
+    }
+
+    private void apriHome(Utente utente) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("HomeView.fxml"));
+            Parent root = loader.load();
+            HomeController controller = loader.getController();
+            controller.init(utente);
+            SceneManager.cambiaView(usernameField, root, "TheKnife - Home");
+        } catch (Exception e) {
+            mostraErrore("Errore nel caricamento della home.", false, false);
             e.printStackTrace();
         }
     }

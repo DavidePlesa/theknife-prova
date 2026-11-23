@@ -25,11 +25,8 @@ public class RegisterController {
 
     private static final String CLASS_OK = "field-ok";
     private static final String CLASS_ERROR = "field-error";
-    private TheKnifeService service;
 
-    public void init(TheKnifeService service) {
-        this.service = service;
-    }
+    private boolean inAttesa = false; // solo thread JavaFX
 
     private String cifra(String password) {
         try {
@@ -66,14 +63,15 @@ public class RegisterController {
 
     @FXML
     private void handleRegistrati() {
+        if (inAttesa) return;
         resetStato();
 
-        String nome = nomeField.getText().trim();
-        String cognome = cognomeField.getText().trim();
-        String username = usernameField.getText().trim();
-        String password = passwordField.getText();
-        String domicilio = domicilioField.getText().trim();
-        String ruolo = radioCliente.isSelected() ? "cliente" : "ristoratore";
+        final String nome = nomeField.getText().trim();
+        final String cognome = cognomeField.getText().trim();
+        final String username = usernameField.getText().trim();
+        final String password = passwordField.getText();
+        final String domicilio = domicilioField.getText().trim();
+        final String ruolo = radioCliente.isSelected() ? "cliente" : "ristoratore";
 
         if (nome.isEmpty()) {
             mostraErrore("Inserisci il tuo nome.", nomeField);
@@ -92,32 +90,44 @@ public class RegisterController {
             return;
         }
 
-        try {
-            if (!domicilio.isEmpty()) {
-                boolean domicilioValido = service.validaDomicilio(domicilio);
-                if (!domicilioValido) {
-                    mostraErrore("Domicilio non trovato. Inserisci un indirizzo valido.", domicilioField);
-                    return;
+        inAttesa = true;
+        final String passwordCifrata = cifra(password);
+
+        // Codici: 0 = ok, 1 = domicilio non valido, 2 = username già in uso
+        GestoreRichieste.getInstance().esegui(
+            new Operazione<Integer>() {
+                @Override
+                public Integer esegui() throws Exception {
+                    TheKnifeService service = GestoreRichieste.getInstance().getService();
+                    if (!domicilio.isEmpty() && !service.validaDomicilio(domicilio)) {
+                        return Integer.valueOf(1);
+                    }
+                    boolean ok = service.registrazione(nome, cognome, username, passwordCifrata,
+                            domicilio.isEmpty() ? null : domicilio, ruolo);
+                    return Integer.valueOf(ok ? 0 : 2);
                 }
-            }
+            },
+            new Esito<Integer>() {
+                @Override
+                public void successo(Integer codice) {
+                    inAttesa = false;
+                    if (nomeField.getScene() == null) return;
+                    if (codice.intValue() == 1) {
+                        mostraErrore("Domicilio non trovato. Inserisci un indirizzo valido.", domicilioField);
+                    } else if (codice.intValue() == 2) {
+                        mostraErrore("Username già in uso. Scegline un altro.", usernameField);
+                    } else {
+                        handleTornaLogin();
+                    }
+                }
 
-            boolean ok = service.registrazione(
-                    nome, cognome, username,
-                    cifra(password),
-                    domicilio.isEmpty() ? null : domicilio,
-                    ruolo);
-
-            if (ok) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("MainView.fxml"));
-                Parent root = loader.load();
-                SceneManager.cambiaView(nomeField, root, "TheKnife - Login");
-            } else {
-                mostraErrore("Username già in uso. Scegline un altro.", usernameField);
-            }
-        } catch (Exception e) {
-            mostraErrore("Impossibile contattare il server: " + e.getMessage());
-            e.printStackTrace();
-        }
+                @Override
+                public void errore(Exception e) {
+                    inAttesa = false;
+                    mostraErrore("Impossibile contattare il server: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            });
     }
 
     @FXML
