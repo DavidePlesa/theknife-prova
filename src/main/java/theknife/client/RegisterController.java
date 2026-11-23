@@ -94,7 +94,7 @@ public class RegisterController {
         final String passwordCifrata = cifra(password);
 
         // Codici: 0 = ok, 1 = domicilio non valido, 2 = username già in uso
-        GestoreRichieste.getInstance().esegui(
+        GestoreRichieste.getInstance().exec(
             new Operazione<Integer>() {
                 @Override
                 public Integer esegui() throws Exception {

@@ -78,7 +78,7 @@ public class MainController {
         inAttesa = true;
         final String passwordCifrata = cifra(password);
 
-        GestoreRichieste.getInstance().esegui(
+        GestoreRichieste.getInstance().exec(
             new Operazione<Utente>() {
                 @Override
                 public Utente esegui() throws Exception {
@@ -112,7 +112,7 @@ public class MainController {
         resetStato();
         inAttesa = true;
 
-        GestoreRichieste.getInstance().esegui(
+        GestoreRichieste.getInstance().exec(
             new Operazione<Boolean>() {
                 @Override
                 public Boolean esegui() throws Exception {

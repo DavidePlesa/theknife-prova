@@ -118,7 +118,7 @@ public final class GestoreRichieste {
     }
 
     /** Da chiamare dal thread JavaFX. */
-    public synchronized <T> void esegui(Operazione<T> operazione, Esito<T> esito) {
+    public synchronized <T> void exec(Operazione<T> operazione, Esito<T> esito) {
         if (terminato) {
             return;
         }

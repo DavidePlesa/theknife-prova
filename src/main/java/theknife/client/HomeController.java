@@ -106,7 +106,7 @@ public class HomeController {
         btnPrev.setDisable(true);
         btnNext.setDisable(true);
 
-        GestoreRichieste.getInstance().esegui(
+        GestoreRichieste.getInstance().exec(
             new Operazione<List<Ristorante>>() {
                 @Override
                 public List<Ristorante> esegui() throws Exception {
