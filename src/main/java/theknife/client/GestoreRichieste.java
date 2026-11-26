@@ -31,14 +31,14 @@ public final class GestoreRichieste {
         return ISTANZA;
     }
 
-    // ---------- Servizio RMI condiviso (chiamare solo dentro un'Operazione) ----------
+    // ---------- Servizio RMI condiviso (chiamare solo dentro un'Operazione)
+    // ----------
 
     public TheKnifeService getService() throws Exception {
         synchronized (lockServizio) {
             if (servizio == null) {
                 Registry registry = LocateRegistry.getRegistry("localhost", 1099);
-                TheKnifeServiceFactory factory =
-                        (TheKnifeServiceFactory) registry.lookup("TheKnifeFactory");
+                TheKnifeServiceFactory factory = (TheKnifeServiceFactory) registry.lookup("TheKnifeFactory");
                 servizio = factory.getService();
             }
             return servizio;
@@ -124,7 +124,8 @@ public final class GestoreRichieste {
         }
         if (!avviato) {
             for (int i = 0; i < NUM_THREAD; i++) {
-                threads[i] = new Thread(new Worker());
+                threads[i] = new Thread(new Worker(), "Worker-RMI-" + i);
+                threads[i].setDaemon(true);
                 threads[i].start();
             }
             avviato = true;
