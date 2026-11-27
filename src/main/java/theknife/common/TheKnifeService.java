@@ -15,8 +15,13 @@ public interface TheKnifeService extends Remote {
     boolean validaDomicilio(String domicilio) throws RemoteException; // ← AGGIUNTA
 
     // Ricerca ristoranti
-    List<Ristorante> cercaRistorante(String citta, String cucina, Double prezzoMax, Boolean delivery,
-            Boolean prenotazione, Integer stelleMin, int pagina) throws RemoteException;
+    // fasciaPrezzo = numero di simboli ("$$" -> 2); idUtente/raggioKm servono solo senza città scelta
+    List<Ristorante> cercaRistorante(String citta, String cucina, Integer fasciaPrezzo, Boolean delivery,
+            Boolean prenotazione, Integer stelleMin, Integer idUtente, Integer raggioKm, int pagina)
+            throws RemoteException;
+
+    // Città disponibili (per la combobox)
+    List<String> elencoCitta() throws RemoteException;
 
     // Dettaglio
     Ristorante visualizzaRistorante(int idRistorante) throws RemoteException;

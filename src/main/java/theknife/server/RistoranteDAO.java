@@ -7,65 +7,110 @@ import java.util.List;
 
 public class RistoranteDAO {
 
+    // Tutte le cucine di un ristorante in una sola stringa ("Italian, Pizza"):
+    // evita le righe duplicate che si ottenevano con il JOIN su ristorante_cucina.
+    // (package-private: la usa anche UtenteDAO)
+    static final String CUCINE_AGG = """
+            (SELECT string_agg(t.nome, ', ' ORDER BY t.nome)
+               FROM ristorante_cucina rc
+               JOIN tipicucina t ON t.id = rc.id_cucina
+              WHERE rc.id_ristorante = r.id) AS tipo_cucina
+            """;
+
+    // Distanza in km con correzione cos(latitudine) sulla longitudine.
+    // Contiene 3 segnaposto: lat, lon, lat.
+    private static final String DISTANZA_KM =
+            "sqrt(power((l.latitudine - ?) * 111.0, 2) "
+          + "+ power((l.longitudine - ?) * 111.0 * cos(radians(?)), 2))";
+
     private DBManager dbManager;
 
     public RistoranteDAO(DBManager dbManager) {
         this.dbManager = dbManager;
     }
 
-    public List<Ristorante> cerca(String location, String cucina, Double prezzoMax,
-            Boolean delivery, Boolean prenotazione, Integer stelleMin, int pagina) throws SQLException {
+    /**
+     * Due modalità che si escludono a vicenda:
+     *  - citta != null  -> solo i ristoranti di quella città, nessun filtro di distanza
+     *                      (citta è un valore di luoghi.location, es. "Milan, Italy";
+     *                       va bene anche l'inizio, es. "milan", senza distinzione di maiuscole)
+     *  - citta == null  -> ristoranti entro raggioKm da (lat, lon), ordinati per distanza
+     * Se mancano lat/lon/raggioKm (es. ospite) e non c'è città, nessun filtro geografico.
+     * fasciaPrezzo = numero di simboli del prezzo (1 = "$", 2 = "$$", ...).
+     */
+    public List<Ristorante> cerca(String citta, String cucina, Integer fasciaPrezzo,
+            Boolean delivery, Boolean prenotazione, Integer stelleMin,
+            Double lat, Double lon, Integer raggioKm, int pagina) throws SQLException {
+
         List<Ristorante> lista = new ArrayList<>();
         int pageSize = 10;
         int offset = (pagina - 1) * pageSize;
 
-        StringBuilder query = new StringBuilder("""
-                SELECT r.*, l.location, l.address, l.latitudine, l.longitudine,
-                       t.nome AS tipo_cucina
-                FROM ristorantitheknife r
-                JOIN luoghi l ON r.id_luogo = l.id
-                LEFT JOIN ristorante_cucina rc ON r.id = rc.id_ristorante
-                LEFT JOIN tipicucina t ON rc.id_cucina = t.id
-                """);
-
-        if (stelleMin != null)
-            query.append("LEFT JOIN recensioni rec ON r.id = rec.id_ristorante ");
-
-        // Base sempre vera: permette di accodare solo gli AND necessari
-        query.append("WHERE 1=1 ");
-
-        boolean hasLocation = location != null && !location.isBlank();
+        boolean hasCitta = citta != null && !citta.isBlank();
         boolean hasCucina = cucina != null && !cucina.isBlank();
+        boolean perDistanza = !hasCitta && lat != null && lon != null && raggioKm != null;
 
-        if (hasLocation)
-            query.append("AND LOWER(l.location) LIKE LOWER(?) ");
+        StringBuilder query = new StringBuilder(
+                "SELECT r.*, l.location, l.address, l.latitudine, l.longitudine, "
+              + CUCINE_AGG
+              + "FROM ristorantitheknife r "
+              + "JOIN luoghi l ON l.id = r.id_luogo "
+              + "WHERE 1=1 ");
+
+        // L'ordine in cui si accodano i filtri è lo stesso dei set... più sotto.
+        if (perDistanza)
+            query.append("AND ").append(DISTANZA_KM).append(" <= ? ");
+        if (hasCitta)
+            query.append("AND starts_with(LOWER(l.location), LOWER(?)) ");
         if (hasCucina)
-            query.append("AND LOWER(t.nome) = LOWER(?) ");
+            query.append("""
+                    AND EXISTS (SELECT 1
+                                  FROM ristorante_cucina rc
+                                  JOIN tipicucina t ON t.id = rc.id_cucina
+                                 WHERE rc.id_ristorante = r.id
+                                   AND LOWER(t.nome) = LOWER(?))\s
+                    """);
+        if (fasciaPrezzo != null)
+            query.append("AND char_length(r.price) = ? ");
         if (delivery != null)
             query.append("AND r.delivery = ? ");
         if (prenotazione != null)
             query.append("AND r.booking = ? ");
-
-        query.append("GROUP BY r.id, l.location, l.address, l.latitudine, l.longitudine, t.nome ");
-
         if (stelleMin != null)
-            query.append("HAVING AVG(rec.voto) >= ? ");
+            query.append("AND (SELECT AVG(voto) FROM recensioni WHERE id_ristorante = r.id) >= ? ");
 
-        query.append("ORDER BY r.id LIMIT ? OFFSET ?");
+        if (perDistanza)
+            query.append("ORDER BY ").append(DISTANZA_KM).append(", r.id ");
+        else
+            query.append("ORDER BY r.id ");
+        query.append("LIMIT ? OFFSET ?");
 
         try (Connection conn = dbManager.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(query.toString())) {
             int i = 1;
-            if (hasLocation)
-                pstmt.setString(i++, "%" + location.trim() + "%");
+            if (perDistanza) {
+                pstmt.setDouble(i++, lat);
+                pstmt.setDouble(i++, lon);
+                pstmt.setDouble(i++, lat);
+                pstmt.setInt(i++, raggioKm);
+            }
+            if (hasCitta)
+                pstmt.setString(i++, citta.trim());
             if (hasCucina)
                 pstmt.setString(i++, cucina.trim());
+            if (fasciaPrezzo != null)
+                pstmt.setInt(i++, fasciaPrezzo);
             if (delivery != null)
                 pstmt.setBoolean(i++, delivery);
             if (prenotazione != null)
                 pstmt.setBoolean(i++, prenotazione);
             if (stelleMin != null)
                 pstmt.setInt(i++, stelleMin);
+            if (perDistanza) {
+                pstmt.setDouble(i++, lat);
+                pstmt.setDouble(i++, lon);
+                pstmt.setDouble(i++, lat);
+            }
             pstmt.setInt(i++, pageSize);
             pstmt.setInt(i, offset);
 
@@ -77,16 +122,27 @@ public class RistoranteDAO {
         return lista;
     }
 
+    /**
+     * Elenco per la combobox: i valori distinti di luoghi.location, così come sono nel database.
+     */
+    public List<String> elencoCitta() throws SQLException {
+        List<String> citta = new ArrayList<>();
+        String query = "SELECT DISTINCT location FROM luoghi WHERE location IS NOT NULL ORDER BY location";
+        try (Connection conn = dbManager.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                ResultSet rs = pstmt.executeQuery()) {
+            while (rs.next())
+                citta.add(rs.getString(1));
+        }
+        return citta;
+    }
+
     public Ristorante findById(int id) throws SQLException {
-        String query = """
-                SELECT r.*, l.location, l.address, l.latitudine, l.longitudine,
-                       t.nome AS tipo_cucina
-                FROM ristorantitheknife r
-                JOIN luoghi l ON r.id_luogo = l.id
-                LEFT JOIN ristorante_cucina rc ON r.id = rc.id_ristorante
-                LEFT JOIN tipicucina t ON rc.id_cucina = t.id
-                WHERE r.id = ?
-                """;
+        String query = "SELECT r.*, l.location, l.address, l.latitudine, l.longitudine, "
+                + CUCINE_AGG
+                + "FROM ristorantitheknife r "
+                + "JOIN luoghi l ON l.id = r.id_luogo "
+                + "WHERE r.id = ?";
         try (Connection conn = dbManager.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, id);
@@ -156,16 +212,12 @@ public class RistoranteDAO {
 
     public List<Ristorante> findByRistoratore(int idRistoratore) throws SQLException {
         List<Ristorante> lista = new ArrayList<>();
-        String query = """
-                SELECT r.*, l.location, l.address, l.latitudine, l.longitudine,
-                       t.nome AS tipo_cucina
-                FROM ristorantitheknife r
-                JOIN luoghi l ON r.id_luogo = l.id
-                LEFT JOIN ristorante_cucina rc ON r.id = rc.id_ristorante
-                LEFT JOIN tipicucina t ON rc.id_cucina = t.id
-                WHERE r.id_proprietario = ?
-                GROUP BY r.id, l.location, l.address, l.latitudine, l.longitudine, t.nome
-                """;
+        String query = "SELECT r.*, l.location, l.address, l.latitudine, l.longitudine, "
+                + CUCINE_AGG
+                + "FROM ristorantitheknife r "
+                + "JOIN luoghi l ON l.id = r.id_luogo "
+                + "WHERE r.id_proprietario = ? "
+                + "ORDER BY r.id";
         try (Connection conn = dbManager.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, idRistoratore);

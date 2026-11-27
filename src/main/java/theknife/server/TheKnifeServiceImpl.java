@@ -8,7 +8,10 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class TheKnifeServiceImpl implements TheKnifeService {
 
@@ -16,6 +19,9 @@ public class TheKnifeServiceImpl implements TheKnifeService {
     private UtenteDAO utenteDAO;
     private RistoranteDAO ristoranteDAO;
     private RecensioneDAO recensioneDAO;
+
+    // Coordinate del domicilio già calcolate: Nominatim si chiama una volta per utente, non a ogni ricerca
+    private final Map<Integer, double[]> coordinateUtenti = new ConcurrentHashMap<>();
 
     public TheKnifeServiceImpl() {
         this.dbManager = new DBManager();
@@ -41,11 +47,55 @@ public class TheKnifeServiceImpl implements TheKnifeService {
     }
 
     @Override
-    public List<Ristorante> cercaRistorante(String citta, String cucina, Double prezzoMax, Boolean delivery,
-            Boolean prenotazione, Integer stelleMin, int pagina) throws RemoteException {
+    public List<Ristorante> cercaRistorante(String citta, String cucina, Integer fasciaPrezzo, Boolean delivery,
+            Boolean prenotazione, Integer stelleMin, Integer idUtente, Integer raggioKm, int pagina)
+            throws RemoteException {
         try {
-            return ristoranteDAO.cerca(citta, cucina, prezzoMax,
-                    delivery, prenotazione, stelleMin, pagina);
+            Double lat = null;
+            Double lon = null;
+
+            // La posizione serve solo senza città scelta e per un utente registrato (l'ospite non ha domicilio)
+            if ((citta == null || citta.isBlank()) && idUtente != null) {
+                double[] coord = coordinateDomicilio(idUtente);
+                if (coord != null) {
+                    lat = coord[0];
+                    lon = coord[1];
+                }
+            }
+            return ristoranteDAO.cerca(citta, cucina, fasciaPrezzo, delivery, prenotazione, stelleMin,
+                    lat, lon, raggioKm, pagina);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return List.of();
+        }
+    }
+
+    // null se l'utente non ha un domicilio o Nominatim non lo trova/non risponde:
+    // in quel caso la ricerca non applica il filtro di distanza
+    private double[] coordinateDomicilio(int idUtente) throws SQLException {
+        double[] coord = coordinateUtenti.get(idUtente);
+        if (coord == null) {
+            String indirizzo = utenteDAO.getIndirizzo(idUtente);
+            if (indirizzo == null || indirizzo.isBlank()) {
+                return null;
+            }
+            try {
+                float[] f = GeoTheKnife.getLatitudineLongitudine(indirizzo);
+                if (f != null) {
+                    coord = new double[] { f[0], f[1] };
+                    coordinateUtenti.put(idUtente, coord);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return coord;
+    }
+
+    @Override
+    public List<String> elencoCitta() throws RemoteException {
+        try {
+            return ristoranteDAO.elencoCitta();
         } catch (Exception e) {
             e.printStackTrace();
             return List.of();

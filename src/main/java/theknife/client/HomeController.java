@@ -2,6 +2,9 @@ package theknife.client;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,6 +14,7 @@ import theknife.common.Ristorante;
 import theknife.common.Utente;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 public class HomeController {
 
@@ -24,6 +28,7 @@ public class HomeController {
     // --- Sidebar filters ---
     @FXML private ComboBox<String> comboCucina;
     @FXML private ComboBox<String> comboCitta;
+    @FXML private ComboBox<String> comboPrezzo;
     @FXML private Spinner<Integer> spinnerValutazione;
     @FXML private CheckBox checkDelivery;
     @FXML private CheckBox checkPrenotazione;
@@ -32,6 +37,7 @@ public class HomeController {
     @FXML private Button btnLogout;
 
     // --- Center ---
+    @FXML private Label titoloRistoranti;
     @FXML private Label labelRisultati;
     @FXML private GridPane gridPane;
     @FXML private Button btnPrev;
@@ -41,6 +47,10 @@ public class HomeController {
     private Utente utente;
     private int paginaCorrente = 1;
     private int numeroRichiesta = 0; // solo thread JavaFX
+
+    // Elenco completo delle città e la sua vista filtrata mentre l'utente digita
+    private final ObservableList<String> tutteLeCitta = FXCollections.observableArrayList();
+    private FilteredList<String> cittaFiltrate;
 
     public void init(Utente utente) {
         this.utente = utente;
@@ -52,6 +62,7 @@ public class HomeController {
             benvenutoLabel.setText("Guest!");
             inizialeLabel.setText("?");
         }
+        caricaCitta();
         caricaRistoranti();
     }
 
@@ -67,6 +78,41 @@ public class HomeController {
         if (spinnerValutazione.getValueFactory() == null) {
             spinnerValutazione.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 5, 0));
         }
+
+        // Fascia di prezzo: stringhe come nel database ("$", "$$", ...)
+        comboPrezzo.getItems().addAll("Tutti", "$", "$$", "$$$", "$$$$");
+        comboPrezzo.setValue("Tutti");
+
+        // Città: elenco filtrato per prefisso mentre l'utente digita
+        cittaFiltrate = new FilteredList<>(tutteLeCitta, new Predicate<String>() {
+            @Override
+            public boolean test(String c) {
+                return true;
+            }
+        });
+        comboCitta.setItems(cittaFiltrate);
+        comboCitta.getEditor().textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> obs, String vecchio, String nuovo) {
+                // scelta appena fatta dall'elenco: niente filtro
+                if (nuovo != null && nuovo.equals(comboCitta.getValue())) return;
+
+                final String filtro = (nuovo == null) ? "" : nuovo.trim().toLowerCase();
+                cittaFiltrate.setPredicate(new Predicate<String>() {
+                    @Override
+                    public boolean test(String c) {
+                        return filtro.isEmpty() || c.toLowerCase().startsWith(filtro);
+                    }
+                });
+                if (!filtro.isEmpty() && comboCitta.getEditor().isFocused()
+                        && !cittaFiltrate.isEmpty()) {
+                    comboCitta.show();
+                }
+            }
+        });
+
+        // Con una città scelta il raggio non si applica: lo slider si disattiva
+        sliderRaggio.disableProperty().bind(comboCitta.getEditor().textProperty().isNotEmpty());
     }
 
     @FXML
@@ -89,15 +135,48 @@ public class HomeController {
         caricaRistoranti();
     }
 
+    private void caricaCitta() {
+        GestoreRichieste.getInstance().exec(
+            new Operazione<List<String>>() {
+                @Override
+                public List<String> esegui() throws Exception {
+                    return GestoreRichieste.getInstance().getService().elencoCitta();
+                }
+            },
+            new Esito<List<String>>() {
+                @Override
+                public void successo(List<String> citta) {
+                    tutteLeCitta.setAll(citta);
+                }
+
+                @Override
+                public void errore(Exception e) {
+                    e.printStackTrace();
+                }
+            });
+    }
+
     private void caricaRistoranti() {
         final String citta = normalizzaCombo(comboCitta);
         final String cucina = normalizzaCombo(comboCucina);
-        final Double prezzoMax = null;
         final Boolean delivery = checkDelivery.isSelected() ? Boolean.TRUE : null;
         final Boolean prenotazione = checkPrenotazione.isSelected() ? Boolean.TRUE : null;
 
+        // "$$" -> 2: il server confronta il numero di simboli del prezzo
+        String prezzo = comboPrezzo.getValue();
+        final Integer fasciaPrezzo = (prezzo == null || prezzo.equals("Tutti"))
+                ? null : Integer.valueOf(prezzo.length());
+
         Integer valStelle = spinnerValutazione.getValue();
         final Integer stelleMin = (valStelle != null && valStelle > 0) ? valStelle : null;
+
+        // Due modalità: con una città scelta si ignora la posizione; altrimenti
+        // ristoranti entro il raggio dal domicilio dell'utente (lo risolve il server
+        // a partire dall'id; un ospite non ha domicilio, quindi nessun filtro di distanza).
+        final Integer idUtente = (citta == null && utente != null) ? Integer.valueOf(utente.getId()) : null;
+        final Integer raggioKm = (citta == null) ? Integer.valueOf((int) sliderRaggio.getValue()) : null;
+
+        titoloRistoranti.setText(citta != null ? "Ristoranti a " + citta : "Ristoranti Vicini");
 
         final int pagina = paginaCorrente;
         final int idRichiesta = ++numeroRichiesta;
@@ -111,7 +190,8 @@ public class HomeController {
                 @Override
                 public List<Ristorante> esegui() throws Exception {
                     return GestoreRichieste.getInstance().getService().cercaRistorante(
-                            citta, cucina, prezzoMax, delivery, prenotazione, stelleMin, pagina);
+                            citta, cucina, fasciaPrezzo, delivery, prenotazione, stelleMin,
+                            idUtente, raggioKm, pagina);
                 }
             },
             new Esito<List<Ristorante>>() {

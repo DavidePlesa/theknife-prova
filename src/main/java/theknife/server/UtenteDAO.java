@@ -53,6 +53,22 @@ public class UtenteDAO {
         }
     }
 
+    /**
+     * Indirizzo di domicilio scritto dall'utente alla registrazione (null se assente).
+     */
+    public String getIndirizzo(int idUtente) throws SQLException {
+        String query = "SELECT indirizzo_geolocalizzato FROM utenti WHERE id = ?";
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, idUtente);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next())
+                    return rs.getString(1);
+            }
+        }
+        return null;
+    }
+
     public boolean aggiungiPreferito(int idUtente, int idRistorante) throws SQLException {
         String query = "INSERT INTO preferiti (id_utente, id_ristorante) VALUES (?, ?)";
         try (Connection conn = dbManager.getConnection();
@@ -75,16 +91,13 @@ public class UtenteDAO {
 
     public List<Ristorante> visualizzaPreferiti(int idUtente) throws SQLException {
         List<Ristorante> lista = new ArrayList<>();
-        String query = """
-                SELECT r.*, l.location, l.address, l.latitudine, l.longitudine, t.nome AS tipo_cucina
-                FROM ristorantitheknife r
-                JOIN preferiti p ON r.id = p.id_ristorante
-                JOIN luoghi l ON r.id_luogo = l.id
-                LEFT JOIN ristorante_cucina rc ON r.id = rc.id_ristorante
-                LEFT JOIN tipicucina t ON rc.id_cucina = t.id
-                WHERE p.id_utente = ?
-                GROUP BY r.id, l.location, l.address, l.latitudine, l.longitudine, t.nome
-                """;
+        String query = "SELECT r.*, l.location, l.address, l.latitudine, l.longitudine, "
+                + RistoranteDAO.CUCINE_AGG
+                + "FROM ristorantitheknife r "
+                + "JOIN preferiti p ON r.id = p.id_ristorante "
+                + "JOIN luoghi l ON r.id_luogo = l.id "
+                + "WHERE p.id_utente = ? "
+                + "ORDER BY r.id";
         try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, idUtente);
