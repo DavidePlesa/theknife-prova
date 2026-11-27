@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox prefHeight="400.0" prefWidth="600.0">
+         <children>
+            <Label text="Nome Ristorante" />
+            <Separator prefWidth="200.0" />
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Label text="Media Voti: " />
+                        <Label text="Telefono: " />
+                        <Label text="Indirizo: " />
+                        <Label text="Tipo di Cucina:" />
+                        <Label text="Booking: " />
+                        <Label text="Delivery: " />
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Label text="NaN" />
+                        <Label text="NaN" />
+                        <Label text="NaN" />
+                        <Label text="NaN" />
+                        <Label text="NaN" />
+                        <Label text="NaN" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <Separator prefWidth="200.0" />
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label text="Descrizione:" />
+                  <Label text="Lorem Ipsum Dolor" />
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Button mnemonicParsing="false" text="VEDI RECENSIONI" />
+                        <Button mnemonicParsing="false" text="SCRIVI RECENSIONE" />
+                        <Button mnemonicParsing="false" text="AGGIUNGI AI PREFERITI" />
+                     </children>
+                  </HBox>
+                  <Label text="TORNA ALLA LISTA" />
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
