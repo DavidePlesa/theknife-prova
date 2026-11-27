@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@address.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="theknife.client.AddressController">
+   <children>
+      <VBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+            AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <VBox alignment="CENTER" maxWidth="420.0" spacing="16.0">
+               <padding>
+                  <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
+               </padding>
+               <children>
+                  <ImageView fitHeight="90.0" fitWidth="130.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@The_Knife_logo.png" />
+                     </image>
+                  </ImageView>
+
+                  <VBox alignment="CENTER" spacing="4.0">
+                     <children>
+                        <Label fx:id="titoloLabel" id="titoloLabel" text="Inserisci il tuo Indirizzo" />
+                        <Label fx:id="sottotitoloLabel" id="sottotitoloLabel"
+                               text="Lo useremo per mostrarti i ristoranti più vicini a te" />
+                     </children>
+                  </VBox>
+
+                  <TextField fx:id="addressField" promptText="Es. Via Roma 10, Milano..." />
+
+                  <Label fx:id="errorLabel" alignment="CENTER_LEFT" managed="false"
+                         maxWidth="Infinity" styleClass="error-label" text="" visible="false" />
+
+                  <HBox alignment="CENTER" spacing="12.0">
+                     <children>
+                        <Button id="btnIndietro" fx:id="btnIndietro" mnemonicParsing="false" onAction="#handleIndietro" text="Indietro" />
+                        <Button id="btnConferma" fx:id="btnConferma" mnemonicParsing="false" onAction="#handleConferma" text="Continua" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

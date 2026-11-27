@@ -12,7 +12,9 @@ public class GeoTheKnife {
         String urlString = "https://nominatim.openstreetmap.org/search?q="
                 + domicilio.replace(" ", "+") + "&format=json&limit=1";
         URL url = URI.create(urlString).toURL();
-        try (BufferedReader rd = new BufferedReader(new InputStreamReader(url.openStream()))) {
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestProperty("User-Agent", "TheKnifeApp/1.0");
+        try (BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
             String line = rd.readLine();
             return line != null && !line.equals("[]");
         }
@@ -26,8 +28,10 @@ public class GeoTheKnife {
         String urlString = "https://nominatim.openstreetmap.org/search?q="
                 + indirizzo.replace(" ", "+") + "&format=json&limit=1";
         URL url = URI.create(urlString).toURL();
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestProperty("User-Agent", "TheKnifeApp/1.0");
         StringBuilder json = new StringBuilder();
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()))) {
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
             String line;
             while ((line = in.readLine()) != null)
                 json.append(line);

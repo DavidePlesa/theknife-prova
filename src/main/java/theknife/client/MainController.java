@@ -125,7 +125,7 @@ public class MainController {
                 public void successo(Boolean ok) {
                     inAttesa = false;
                     if (usernameField.getScene() == null) return;
-                    apriHome(null);
+                    apriAddress();
                 }
 
                 @Override
@@ -135,6 +135,7 @@ public class MainController {
                     e.printStackTrace();
                 }
             });
+        apriAddress();
     }
 
     @FXML
@@ -158,6 +159,17 @@ public class MainController {
             SceneManager.cambiaView(usernameField, root, "TheKnife - Home");
         } catch (Exception e) {
             mostraErrore("Errore nel caricamento della home.", false, false);
+            e.printStackTrace();
+        }
+    }
+
+    private void apriAddress() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("AddressView.fxml"));
+            Parent root = loader.load();
+            SceneManager.cambiaView(usernameField, root, "TheKnife - Inserisci Indirizzo");
+        } catch (Exception e) {
+            mostraErrore("Errore nel caricamento della vista indirizzo.", false, false);
             e.printStackTrace();
         }
     }
