@@ -115,6 +115,12 @@
                                     <ComboBox fx:id="comboCitta" editable="true" maxWidth="Infinity" minHeight="28.0" prefHeight="28.0" promptText="Cerca città..." />
                                  </content>
                               </TitledPane>
+                              <!-- Prezzo -->
+                              <TitledPane animated="false" text="Prezzo">
+                                 <content>
+                                    <ComboBox fx:id="comboPrezzo" maxWidth="Infinity" minHeight="28.0" prefHeight="28.0" />
+                                 </content>
+                              </TitledPane>
                               <!-- Valutazione -->
                               <TitledPane animated="false" text="Valutazione">
                                  <content>
