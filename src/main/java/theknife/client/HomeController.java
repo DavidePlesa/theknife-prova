@@ -80,8 +80,10 @@ public class HomeController {
         }
 
         // Fascia di prezzo: stringhe come nel database ("$", "$$", ...)
+        /*
         comboPrezzo.getItems().addAll("Tutti", "$", "$$", "$$$", "$$$$");
         comboPrezzo.setValue("Tutti");
+        */
 
         // Città: elenco filtrato per prefisso mentre l'utente digita
         cittaFiltrate = new FilteredList<>(tutteLeCitta, new Predicate<String>() {
